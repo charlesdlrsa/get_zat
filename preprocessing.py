@@ -12,6 +12,7 @@ from nltk.stem import LancasterStemmer, WordNetLemmatizer
 from french_lefff_lemmatizer.french_lefff_lemmatizer import FrenchLefffLemmatizer
 
 
+
 class PreProcesseur:
 
     """

@@ -88,35 +88,26 @@ def nb_token(collection):
 
 
 def agg_terms(collection):
-    def mapper(docid):
-        dic_term = {'T': collection[docid][0] if len(collection[docid]) > 0 else [],
-                    'W': collection[docid][1] if len(collection[docid]) > 1 else [],
-                    'K': collection[docid][2] if len(collection[docid]) > 2 else []
-                    }
-        return docid, dic_term
-    map_coll = list(map(mapper, collection))
-
-    print(map_coll[2])
 
     dic_sent = {0: 'T', 1: 'W', 2: 'K'}
     index_inv = {}
     for docid in collection:
-        dic_term = {'T': [],
-                    'W': [],
-                    'K': []
-                    }
         for i, el in enumerate(collection[docid]):
-            long = len(collection[docid[i]])
             for words in el:
-                dic_term = {'T': 1/len(collection[docid][0]) if i == 0 else 0,
-                            'W': 1/len(collection[docid][1]) if i == 1 else 0,
-                            'K': 1/len(collection[docid][2]) if i == 2 else 0,
+                long = len(collection[docid][i])
+                dic_term = {'T': 1 / long if i == 0 else 0,
+                            'W': 1 / long if i == 1 else 0,
+                            'K': 1 / long if i == 2 else 0,
                             }
                 if words not in index_inv:
-                    index_inv[words] = [(docid, dic_term)]
+                    index_inv[words] = {docid: dic_term}
                 else:
-                    ancienne_freq = index_inv[words][docid]['T']
-                    index_inv[words].append((docid, dic_term))
+                    if docid in index_inv[words]:
+                        index_inv[words][docid][dic_sent[i]] += 1/long
+                    else:
+                        index_inv[words][docid] = dic_term
+
+    return index_inv
 
     exemple = {'techniques': [(3, {'T': 0.2, 'W': 0, 'K': 0}), (16, {'T': 0.1, 'W': 0, 'K': 0})]}
 
@@ -129,7 +120,8 @@ if __name__ == '__main__':
     col_token = tokenisation(files)
     col_token = remove_common_words(col_token, path_common)
 
-    agg_terms(col_token)
+    index_inv = agg_terms(col_token)
+    print(index_inv)
 
     #for docid in col_token:
     #    print(docid, col_token[docid])
