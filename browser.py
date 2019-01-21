@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 
 # Importation des librairies
-import os
 from math import log, sqrt
 import matplotlib.pyplot as plt
+import numpy as np
 
-from file_manager import read_file
 from nlp_processing import tokenisation, nb_token
+from datetime import datetime
 
 
 def build_index_inv(collection_tokens):
@@ -73,14 +73,16 @@ def vectorization_bool(req_term, request_type, index_inv, collection_tokens):
     """
 
     q = []
-    d = [[0 for i in range(len(index_inv))] for i in range(len(collection_tokens))]
+    d = [[0 for _ in range(len(index_inv))] for _ in range(len(collection_tokens))]
     i = 0
     for term in index_inv:
+        # request vectorization
         if term in req_term:
             q.append(1)
         else:
             q.append(0)
 
+        # inversed index vectorization
         liste = [key for key in index_inv[term] if index_inv[term][key][request_type] != 0]
         for k in liste:
             d[k-1][i] = 1
@@ -89,33 +91,90 @@ def vectorization_bool(req_term, request_type, index_inv, collection_tokens):
     return q, d
 
 
-def vectorization_tfidf(req_term, request_type, index_inv, collection_tokens):
+def vectorization_tfidf(req_term, request_type, index_inv, collection_tokens, norm=False):
     """
     Vectorise la requête et le corpus selon la méthode TF-IDF
+    Avec l'argument norm, la requête est préalablement normalisée
     """
 
     nb_doc = len(collection_tokens)
     q = []
-    d = [[0 for i in range(len(index_inv))] for i in range(nb_doc)]
+    d = [[0 for _ in range(len(index_inv))] for _ in range(nb_doc)]
     i = 0
 
     map_request_type = {'T': 0, 'W': 1, 'K': 2}
 
     for term in index_inv:
+        # doc_id where term is present
         liste = [key for key in index_inv[term] if index_inv[term][key][request_type] != 0]
         idf = log(nb_doc / len(liste), 10) if len(liste) != 0 else 0
 
-        tf_q = req_term.count(term)
-        if tf_q != 0:
-            q.append((1 + log(tf_q, 10)) * idf)
+        # request vectorization
+        if term in req_term:
+            q.append(1)
         else:
             q.append(0)
 
+        # inversed index vectorization
+        sum_d = 0
         for k in liste:
             nb_mots_doc = len(collection_tokens[k][map_request_type[request_type]])
             tf = nb_mots_doc * index_inv[term][k][request_type]
-            d[k-1][i] = (1 + log(tf, 10)) * idf
+            if norm:
+                d[k - 1][i] = (1 + log(tf)) * idf
+            else:
+                d[k-1][i] = (1 + log(tf, 10)) * idf
+            sum_d += d[k-1][i]
+
         i += 1
+
+    # for normalized tf_idf
+    if norm:
+        for doc_id in range(len(d)):
+            sum_d = sum([w for w in d[doc_id]])
+            n_d = 1 / sqrt(sum_d) if sum_d != 0 else 0
+            for term in range(len(d[doc_id])):
+                d[doc_id][term] = n_d * d[doc_id][term]
+
+    return q, d
+
+
+def vectorization_freq_norm(req_term, request_type, index_inv, collection_tokens):
+    """
+    Vectorise la requête et le corpus selon la méthode de fréquence normalisée
+    """
+
+    nb_doc = len(collection_tokens)
+    q = []
+    d = [[0 for _ in range(len(index_inv))] for _ in range(nb_doc)]
+    i = 0
+
+    map_request_type = {'T': 0, 'W': 1, 'K': 2}
+
+    for term in index_inv:
+        # doc_id where term is present
+        liste = [key for key in index_inv[term] if index_inv[term][key][request_type] != 0]
+
+        # request vectorization
+        if term in req_term:
+            q.append(1)
+        else:
+            q.append(0)
+
+        # inversed index vectorization
+        for k in liste:
+            nb_mots_doc = len(collection_tokens[k][map_request_type[request_type]])
+            tf = nb_mots_doc * index_inv[term][k][request_type]
+            d[k - 1][i] = tf
+
+        i += 1
+
+    # normalization per document
+    for doc_id in range(len(d)):
+        freq_max = max([w for w in d[doc_id]])
+        n_d = 1 / sqrt(freq_max) if freq_max != 0 else 0
+        for term in range(len(d[doc_id])):
+            d[doc_id][term] = n_d * d[doc_id][term]
 
     return q, d
 
@@ -124,21 +183,23 @@ def compute_similarity(vec_request, vec_collections):
     """
     Calcule la similarité entre la requête vectorisée et chaque document vectorisé
     """
+    print(len(vec_request))
 
-    def dotproduct(v1, v2):
-        return sum((a * b) for a, b in zip(v1, v2))
+    def sim(v1, v2, norm_v2):
+        v1 = np.array(v1)
+        v2 = np.array(v2)
+        return np.vdot(v1, v2) / (np.linalg.norm(v1) * norm_v2)
 
-    def length(v):
-        return sqrt(dotproduct(v, v))
-
-    def sim(v1, v2):
-        return dotproduct(v1, v2) / (length(v1) * length(v2))
-
+    t2 = datetime.now()
     simil = []
+    norm_request = np.linalg.norm(vec_request)
     for i in range(len(vec_collections)):
-        simil.append(sim(vec_collections[i], vec_request))
+        simil.append(sim(vec_collections[i], vec_request, norm_request))
+    t3 = datetime.now()
+    print('compute sim :', t3-t2)
 
     doc_similarity = list(map(lambda el: (el[0] + 1, el[1]), enumerate(simil)))
+    # sort document by similarity and display the 10 first elements
     doc_similarity = sorted(doc_similarity, key=lambda el: el[1], reverse=True)
     doc_similarity = list(map(lambda el: el[0], doc_similarity))[:10]
 
@@ -152,11 +213,17 @@ def boolean_request(mot1, op, mot2, index_inv, request_type):
     if request_type not in ('T', 'W', 'K'):
         raise ValueError("type should be in ('T', 'W', 'K'), is {}".format(request_type))
 
+    mot1, mot2 = mot1.lower(), mot2.lower()
+
+    docids_mot1 = []
+    docids_mot2 = []
+
     try:
         docids_mot1 = [key for key in index_inv[mot1] if index_inv[mot1][key][request_type] != 0]
         docids_mot2 = [key for key in index_inv[mot2] if index_inv[mot2][key][request_type] != 0]
-    except KeyError as e:
-        return e
+    except KeyError:
+        pass
+
     docids_request = []
     if op == "AND":
         for elt in docids_mot1:
@@ -173,7 +240,7 @@ def boolean_request(mot1, op, mot2, index_inv, request_type):
             if elt not in docids_mot2:
                 docids_request.append(elt)
     else:
-        raise ValueError("Vous n'avez pas entré un operateur valide")
+        raise ValueError("You should enter a valid operator")
 
     docids_request.sort()
 
@@ -183,6 +250,7 @@ def boolean_request(mot1, op, mot2, index_inv, request_type):
 def vector_request(request, request_type, index_inv, path_common_words, collection_tokens, ponderation):
     """
     Cette fonction permet d'effectuer une recherche vectorisée a partir d'une collection tokenise
+    On peut choisir la méthode de pondéraion avec l'argument 'ponderation'
     """
 
     if request_type not in ('T', 'W', 'K'):
@@ -194,10 +262,18 @@ def vector_request(request, request_type, index_inv, path_common_words, collecti
         vec_request, vec_collection = vectorization_bool(req_term, request_type, index_inv, collection_tokens)
     elif ponderation == 'tfidf':
         vec_request, vec_collection = vectorization_tfidf(req_term, request_type, index_inv, collection_tokens)
+    elif ponderation == 'tfidf_norm':
+        vec_request, vec_collection = vectorization_tfidf(req_term, request_type, index_inv, collection_tokens,
+                                                          norm=True)
+    elif ponderation == 'freq_norm':
+        vec_request, vec_collection = vectorization_freq_norm(req_term, request_type, index_inv, collection_tokens)
     else:
-        raise ValueError("ponderation is not correct")
+        raise ValueError("ponderation is not correct, should be 'bool', 'tfidf', 'tfidf_norm', 'freq_norm'.")
 
+    t3 = datetime.now()
     doc_similarity = compute_similarity(vec_request, vec_collection)
+    t4 = datetime.now()
+    print('similarity duration ', t4-t3)
 
     return doc_similarity
 

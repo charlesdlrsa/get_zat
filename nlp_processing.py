@@ -21,6 +21,7 @@ def tokenisation(collection, path_common_words):
         for l in file.readlines():
             list_stop_words.append(l[:-1])
 
+    # TODO : filtre qui supprime les chiffres et l'influence sur la taille du vocabulaire
     collection_tokens = {}
     for docid in collection:
         doc_token = []
@@ -40,5 +41,6 @@ def nb_token(collection_tokens):
     """
     Cette fonction compte le nombre de tokens dans une collection donnee
     """
-    return reduce(lambda acc1, y: acc1 + reduce(lambda acc2, z: acc2 + len(z), collection_tokens[y], 0), collection_tokens, 0)
+    return reduce(lambda acc1, y: acc1 + reduce(lambda acc2, z: acc2 + len(z), collection_tokens[y], 0),
+                  collection_tokens, 0)
 
