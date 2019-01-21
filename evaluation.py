@@ -18,7 +18,7 @@ def compute_recall():
     """
 
 
-def display_graph_PR():
+def display_graph_pr():
     """
     Cette fonction trace le graphe précision-rappel
     """

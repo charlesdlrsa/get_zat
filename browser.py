@@ -105,28 +105,44 @@ def vectorization_tfidf(req_term, request_type, index_inv, collection_tokens, no
     map_request_type = {'T': 0, 'W': 1, 'K': 2}
 
     for term in index_inv:
-        # doc_id where term is present
-        liste = [key for key in index_inv[term] if index_inv[term][key][request_type] != 0]
-        idf = log(nb_doc / len(liste), 10) if len(liste) != 0 else 0
 
-        # request vectorization
         if term in req_term:
+            # request vectorization
             q.append(1)
+
+            # list of doc_id where term is present
+            liste = [key for key in index_inv[term] if index_inv[term][key][request_type] != 0]
+            idf = log(nb_doc / len(liste), 10) if len(liste) != 0 else 0
+
+            sum_d = 0
+            for k in liste:
+                nb_mots_doc = len(collection_tokens[k][map_request_type[request_type]])
+                tf = nb_mots_doc * index_inv[term][k][request_type]
+                if norm:
+                    d[k - 1][i] = (1 + log(tf)) * idf
+                else:
+                    d[k - 1][i] = (1 + log(tf, 10)) * idf
+                sum_d += d[k - 1][i]
+
         else:
             q.append(0)
+        i += 1
 
         # inversed index vectorization
-        sum_d = 0
-        for k in liste:
-            nb_mots_doc = len(collection_tokens[k][map_request_type[request_type]])
-            tf = nb_mots_doc * index_inv[term][k][request_type]
-            if norm:
-                d[k - 1][i] = (1 + log(tf)) * idf
-            else:
-                d[k-1][i] = (1 + log(tf, 10)) * idf
-            sum_d += d[k-1][i]
-
-        i += 1
+        # sum_d = 0
+        # for k in liste:
+        #     d_bis.append([0 for _ in range(len(index_inv))])
+        #     nb_mots_doc = len(collection_tokens[k][map_request_type[request_type]])
+        #     tf = nb_mots_doc * index_inv[term][k][request_type]
+        #     if norm:
+        #         d[k - 1][i] = (1 + log(tf)) * idf
+        #         d_bis[-1][i] = (1 + log(tf)) * idf
+        #     else:
+        #         d[k-1][i] = (1 + log(tf, 10)) * idf
+        #         d_bis[-1][i] = (1 + log(tf, 10)) * idf
+        #     sum_d += d[k-1][i]
+        #
+        # i += 1
 
     # for normalized tf_idf
     if norm:
@@ -183,7 +199,6 @@ def compute_similarity(vec_request, vec_collections):
     """
     Calcule la similarité entre la requête vectorisée et chaque document vectorisé
     """
-    print(len(vec_request))
 
     def sim(v1, v2, norm_v2):
         v1 = np.array(v1)
@@ -194,7 +209,10 @@ def compute_similarity(vec_request, vec_collections):
     simil = []
     norm_request = np.linalg.norm(vec_request)
     for i in range(len(vec_collections)):
-        simil.append(sim(vec_collections[i], vec_request, norm_request))
+        if sum(vec_collections[i]) == 0:
+            simil.append(0)
+        else:
+            simil.append(sim(vec_collections[i], vec_request, norm_request))
     t3 = datetime.now()
     print('compute sim :', t3-t2)
 
