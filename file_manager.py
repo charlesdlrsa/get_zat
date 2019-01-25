@@ -5,9 +5,9 @@
 import os
 
 
-def read_file(path):
+def read_file(path, tags):
     """
-    Fonction permettat de lire le fichier en extrayant uniquement certaines balises
+    Fonction permettant de lire le fichier en extrayant uniquement certaines balises
     """
     if not os.path.exists(path):
         raise FileNotFoundError("file {} does not exists".format(path))
@@ -24,7 +24,7 @@ def read_file(path):
                     doc_id = int(l[3:].strip())
                     collection[doc_id] = []
                     continue
-                elif marqueur in (".T", ".W", ".K"):
+                elif marqueur in tags:
                     continue_read = True
                     change_marqueur = True
                     continue
@@ -40,3 +40,25 @@ def read_file(path):
                     collection[doc_id][-1] += l.strip() + " "
 
     return collection
+
+
+def read_answers(path):
+    """
+    Fonction permettant de lire le fichier en extrayant uniquement les doc_ids
+    """
+    if not os.path.exists(path):
+        raise FileNotFoundError("file {} does not exists".format(path))
+
+    collection = {}
+    with open(path, 'r') as file:
+        for l in file.readlines():
+            split = l.split(' ')
+            index, doc_id = int(split[0]), int(split[1])
+            if not collection.get(index):
+                collection[index] = [doc_id]
+            else:
+                collection[index] += [doc_id]
+
+    return collection
+
+

@@ -205,7 +205,6 @@ def compute_similarity(vec_request, vec_collections):
         v2 = np.array(v2)
         return np.vdot(v1, v2) / (np.linalg.norm(v1) * norm_v2)
 
-    t2 = datetime.now()
     simil = []
     norm_request = np.linalg.norm(vec_request)
     for i in range(len(vec_collections)):
@@ -213,8 +212,6 @@ def compute_similarity(vec_request, vec_collections):
             simil.append(0)
         else:
             simil.append(sim(vec_collections[i], vec_request, norm_request))
-    t3 = datetime.now()
-    print('compute sim :', t3-t2)
 
     doc_similarity = list(map(lambda el: (el[0] + 1, el[1]), enumerate(simil)))
     # sort document by similarity and display the 10 first elements
@@ -288,11 +285,29 @@ def vector_request(request, request_type, index_inv, path_common_words, collecti
     else:
         raise ValueError("ponderation is not correct, should be 'bool', 'tfidf', 'tfidf_norm', 'freq_norm'.")
 
-    t3 = datetime.now()
     doc_similarity = compute_similarity(vec_request, vec_collection)
-    t4 = datetime.now()
-    print('similarity duration ', t4-t3)
 
     return doc_similarity
+
+
+def compute_precision(questions, request_type, index_inv, path_common_words, collection_tokens, ponderation, answers):
+
+    returned_docs = {}
+    for index, query in questions.items():
+        returned_docs[index] = vector_request(query[0], request_type, index_inv, path_common_words, collection_tokens, ponderation)
+
+    precision = 0
+    for index, answer in answers.items():
+        tp, fp = 0, 0
+        for doc_id in returned_docs[index]:
+            if doc_id in answer:
+                tp += 1
+            else:
+                fp += 1
+        precision += tp/(tp+fp)
+
+    return precision
+
+
 
 
