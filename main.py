@@ -16,11 +16,11 @@ if __name__ == '__main__':
     path_answers = os.path.join('cacm', 'qrels.text')
     path_common_words = os.path.join('cacm', 'common_words')
     collection = read_file(path_cacm, [".T", ".W", ".K"])
+    print(len(collection))
     questions = read_file(path_questions, [".W"])
     answers = read_answers(path_answers)
-    print(questions)
-    print(answers)
     collection_tokens = tokenisation(collection, path_common_words)
+    print(len(collection_tokens))
     # >>> 3s59ms to tokenise
     # print(nb_token(collection_tokens))
     # >>> 118931

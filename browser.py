@@ -97,13 +97,13 @@ def vectorization_tfidf(req_term, request_type, index_inv, collection_tokens, no
     Avec l'argument norm, la requête est préalablement normalisée
     """
 
-    nb_doc = len(collection_tokens)
+    nb_docs = len(collection_tokens)
     q = []
-    d = [[0 for _ in range(len(index_inv))] for _ in range(nb_doc)]
-    i = 0
+    d = [[0 for _ in range(len(index_inv))] for _ in range(nb_docs)]
 
     map_request_type = {'T': 0, 'W': 1, 'K': 2}
 
+    i = 0
     for term in index_inv:
 
         if term in req_term:
@@ -111,38 +111,21 @@ def vectorization_tfidf(req_term, request_type, index_inv, collection_tokens, no
             q.append(1)
 
             # list of doc_id where term is present
-            liste = [key for key in index_inv[term] if index_inv[term][key][request_type] != 0]
-            idf = log(nb_doc / len(liste), 10) if len(liste) != 0 else 0
-
+            doc_ids = [key for key in index_inv[term] if index_inv[term][key][request_type] != 0]
+            idf = log(nb_docs / len(doc_ids), 10) if len(doc_ids) != 0 else 0
             sum_d = 0
-            for k in liste:
+            for k in doc_ids:
                 nb_mots_doc = len(collection_tokens[k][map_request_type[request_type]])
                 tf = nb_mots_doc * index_inv[term][k][request_type]
                 if norm:
-                    d[k - 1][i] = (1 + log(tf)) * idf
+                    d[k-1][i] = (1 + log(tf)) * idf
                 else:
-                    d[k - 1][i] = (1 + log(tf, 10)) * idf
+                    d[k-1][i] = (1 + log(tf, 10)) * idf
                 sum_d += d[k - 1][i]
-
+            i += 1
         else:
             q.append(0)
-        i += 1
-
-        # inversed index vectorization
-        # sum_d = 0
-        # for k in liste:
-        #     d_bis.append([0 for _ in range(len(index_inv))])
-        #     nb_mots_doc = len(collection_tokens[k][map_request_type[request_type]])
-        #     tf = nb_mots_doc * index_inv[term][k][request_type]
-        #     if norm:
-        #         d[k - 1][i] = (1 + log(tf)) * idf
-        #         d_bis[-1][i] = (1 + log(tf)) * idf
-        #     else:
-        #         d[k-1][i] = (1 + log(tf, 10)) * idf
-        #         d_bis[-1][i] = (1 + log(tf, 10)) * idf
-        #     sum_d += d[k-1][i]
-        #
-        # i += 1
+            i += 1
 
     # for normalized tf_idf
     if norm:
@@ -306,7 +289,7 @@ def compute_precision(questions, request_type, index_inv, path_common_words, col
                 fp += 1
         precision += tp/(tp+fp)
 
-    return precision
+    return precision/len(answers)
 
 
 
