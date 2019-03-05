@@ -14,7 +14,14 @@ Elles nous permettent de lire nos datasets de corpus, questions et réponses ass
 Les fonctions filtrant nos données texte se situent dans le fichier `nlp_processing`.
 Elles nous permettent de tokeniser nos textes, d'en supprimer les chiffres, les mots communs et de lémantiser les mots.
 
-## 
+## Construction de notre index inversé
+
+## Requête booléenne
+
+## Requête booléenne
+
+## Requête Tf-idf (normalisée ou pas)
+
 
 
 
