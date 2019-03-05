@@ -12,8 +12,7 @@ class BooleanVectorizer:
     Classe permettant de vectoriser un corpus et une requête selon une méthode booléenne
     """
 
-    def __init__(self, request_type):
-        self.__request_type = request_type
+    def __init__(self):
         self.__inversed_index = []
 
     def fit_transform(self, inversed_index, collection_tokens):
@@ -24,7 +23,7 @@ class BooleanVectorizer:
         vec_matrix = {doc_id: [0 for _ in range(len(inversed_index))] for doc_id in collection_tokens}
         for i, term in enumerate(inversed_index):
             doc_ids = [doc_id for doc_id in inversed_index[term]
-                       if inversed_index[term][doc_id][self.__request_type] != 0]
+                       if inversed_index[term][doc_id] != 0]
             for doc_id in doc_ids:
                 vec_matrix[doc_id][i] = 1
 
