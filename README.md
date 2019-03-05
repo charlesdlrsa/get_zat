@@ -4,8 +4,9 @@ _Auteurs : Erwan de Kergaradec et Charles de la Roche Saint André_
 
 ## Introduction
 
-Vous trouverez dans ce `ReadME` l'ensemble de nos résultats concernant notre projet scolaire de "Fondements à la recherche d'informations". Ce projet scolaire s'appuie sur le dataset CACM contenant un ensemble de documents, questions et réponses. <br>
-Chacune des parties détaille le contenu de nos fichiers `.py` ainsi que les rôles respectifs de nos fonctions. <br>
+Vous trouverez dans ce `ReadME` l'ensemble de nos résultats concernant notre projet scolaire de "Fondements à la recherche d'informations". Ce premier projet a pour objectif de mettre en œuvre les notions fondamentales d’indexation et de
+modèles de recherche vues en cours par la réalisation d’un petit moteur de recherche ad-hoc. Il s'appuie sur la base statique de documents textuels CACM contenant un ensemble de corpus, questions et réponses associées. <br>
+Chacune des parties ci-dessous détaille le contenu de nos fichiers `.py` ainsi que les rôles respectifs de nos fonctions. <br>
 La dernière partie explique comment lancer notre code pour retrouver les mêmes résultats et faire vos propres recherches sur le corpus CACM.
 
 ## Lecture des datasets
