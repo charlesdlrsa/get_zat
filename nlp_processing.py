@@ -8,7 +8,7 @@ import os
 import re
 
 
-def tokenisation(collection, path_common_words):
+def tokenisation(collection, path_common_words, stemming=False):
     """
     Cette fonction tokenise les mots, enlève la ponctuation, les mots communs et met en minuscule
     """
@@ -31,6 +31,10 @@ def tokenisation(collection, path_common_words):
                 word = word.lower()
                 word = re.sub(r'[^\w\s]', '', word)
                 if word != '' and word not in list_stop_words and not word.isdigit():
+                    if stemming:
+                        from nltk.stem.snowball import SnowballStemmer
+                        stemmer = SnowballStemmer("english")
+                        word = stemmer.stem(word)
                     new_sent_token.append(word)
 
             doc_token.append(new_sent_token)
