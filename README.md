@@ -28,7 +28,7 @@ Elles nous permettent de :
 - tokeniser nos textes
 - supprimer les chiffres
 - supprimer les mots communs
-- lémantiser les mots
+- raciniser les mots
 
 Une fois notre collection de documents tokenisée, nous trouvons les informations suivantes :
 - nombre de tokens de notre collection : **108 113 tokens**
@@ -36,11 +36,11 @@ Une fois notre collection de documents tokenisée, nous trouvons les information
 
 ## Indexation
 
-La construction de notre index inversé a lieu dans le fichier `browser.py`. <br>
+La construction de notre index inversé a lieu dans le fichier `browser.py` au sein de la fonction `build_index_inv`. <br>
 Notre index inversé est un dictionnaire dont :
 - les clefs sont les tokens de notre collection de documents
 - les valeurs sont des dictionnaires dont:
-  - les clefs sont les identifiants de nos documents contentant le token
+  - les clefs sont les identifiants de nos documents contenant le token
   - les valeurs sont les fréquences d'apparition du token dans le document en question
   
 Nous avons pu déterminer de cet index inversé la taille de notre vocabulaire : **5405 tokens**.
@@ -60,6 +60,8 @@ Ensuite, en fonction de l'opérateur (AND, OR, NOT), on renvoie la liste triée 
 ### Pondération tf-idf
 
 ### Pondération tf-idf normalisée
+
+### Pondération fréquence normalisée
 
 ## Evaluation pour la collection CACM
 
