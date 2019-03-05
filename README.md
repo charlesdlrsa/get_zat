@@ -28,7 +28,7 @@ Elles nous permettent de :
 - tokeniser nos textes
 - supprimer les chiffres
 - supprimer les mots communs
-- lémantiser les mots
+- raciniser les mots
 
 Une fois notre collection de documents tokenisée, nous trouvons les informations suivantes :
 - nombre de tokens de notre collection : **108 113 tokens**
