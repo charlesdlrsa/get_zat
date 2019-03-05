@@ -31,8 +31,6 @@ Elles nous permettent de :
 
 Une fois notre collection de documents tokenisée, nous trouvons les informations suivantes :
 - nombre de tokens de notre collection : 
-- taille du vocabulaire de notre collection : 
-- taille du vocabulaire pour une collection d'un million de tokens :
 - graphe de la fréquence (f) vs rang (r) pour tous les tokens de la collection : 
 
 ## Indexation
@@ -43,11 +41,17 @@ Notre index inversé est un dictionnaire dont :
 - les valeurs sont des dictionnaires dont:
   - les clefs sont les identifiants de nos documents contentant le token
   - les valeurs sont les fréquences d'apparition du token dans le dit-document
+  
+Nous avons pu déterminer de cet index inversé la taille de notre vocabulaire : 
  
  
 
 ## Moteur de recherche booléen
 
+Nous avons mis en place un modèle de recherche booléen dans le fichier `browser.py`. <br>
+Ce modèle de recherche assez simpliste sur base sur un opérateur et deux mots clefs que l'on désire rechercher. <br>
+Assez basiquement, on regarde quels documents contiennent le premier mot et quels documents contiennent le second mot, une fois ces deux mots pré-traités de la même manière que notre collection de documents.<br>
+Ensuite, en fonction de l'opérateur (AND, OR, NOT), on renvoie la liste des documents correspondants à notre requête booléenne.
 
 
 ## Modèle de recherche vectoriel
