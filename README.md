@@ -10,14 +10,14 @@ La dernière partie explique comment lancer notre code pour retrouver les mêmes
 
 ## Lecture des datasets
 
-Toutes les fonctions de lectures des datasets sont présentes dans notre fichier `file_manager.py`.
-Elles nous permettent de lire nos datasets de corpus, questions et réponses associées et de sotcker les informations sous forme de dictionnaires de données dont : 
+Toutes les fonctions de lecture des datasets sont présentes dans notre fichier `file_manager.py`.
+Elles nous permettent de lire nos datasets de corpus, questions et réponses associées et de sotcker les informations sous forme de dictionnaires python dont : 
 - les clefs sont les identifiants des documents, questions et réponses
-- les valeurs sont les "strings" associées à ces données
+- les valeurs sont les données textuelles associées à chaque document, question, réponse
 
 ## Traitement linguistique
 
-Les fonctions filtrant nos données texte se situent dans le fichier `nlp_processing`.
+Les fonctions filtrant nos données linguistiques se situent dans le fichier `nlp_processing.py`.
 Elles nous permettent de tokeniser nos textes, d'en supprimer les chiffres, les mots communs et de lémantiser les mots.
 
 ## Indexation
