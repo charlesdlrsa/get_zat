@@ -22,30 +22,27 @@ def tokenisation(collection, path_common_words, stemming=False):
             list_stop_words.append(l[:-1])
 
     collection_tokens = {}
-    for docid in collection:
-        doc_token = []
-        for sentence in collection[docid]:
-            sent_token = wordpunct_tokenize(sentence)
-            new_sent_token = []
-            for word in sent_token:
-                word = word.lower()
-                word = re.sub(r'[^\w\s]', '', word)
-                if word != '' and word not in list_stop_words and not word.isdigit():
-                    if stemming:
-                        from nltk.stem.snowball import SnowballStemmer
-                        stemmer = SnowballStemmer("english")
-                        word = stemmer.stem(word)
-                    new_sent_token.append(word)
+    for docid, sentence in collection.items():
+        sent_token = wordpunct_tokenize(sentence)
+        new_sent_token = []
+        for word in sent_token:
+            word = word.lower()
+            word = re.sub(r'[^\w\s]', '', word)
+            if word != '' and word not in list_stop_words and not word.isdigit():
+                if stemming:
+                    from nltk.stem.snowball import SnowballStemmer
+                    stemmer = SnowballStemmer("english")
+                    word = stemmer.stem(word)
+                new_sent_token.append(word)
 
-            doc_token.append(new_sent_token)
-        collection_tokens[docid] = doc_token
+        collection_tokens[docid] = new_sent_token
+
     return collection_tokens
 
 
-def nb_token(collection_tokens):
+def nb_tokens(collection_tokens):
     """
     Cette fonction compte le nombre de tokens dans une collection donnee
     """
-    return reduce(lambda acc1, y: acc1 + reduce(lambda acc2, z: acc2 + len(z), collection_tokens[y], 0),
-                  collection_tokens, 0)
+    return reduce(lambda acc, y: acc + len(collection_tokens[y]), collection_tokens, 0)
 

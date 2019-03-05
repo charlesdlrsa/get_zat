@@ -16,16 +16,15 @@ if __name__ == '__main__':
     path_answers = os.path.join('cacm', 'qrels.text')
     path_common_words = os.path.join('cacm', 'common_words')
     collection = read_file(path_cacm, [".T", ".W", ".K"])
-    print(len(collection))
+    print(collection[39])
+    # "The Secant Method for Simultaneous Nonlinear Equations. A procedure for the simultaneous solution. of a system of not-necessarily-linear equations, a generalization of the secant method for a single function of one variable, is given."
     questions = read_file(path_questions, [".W"])
     answers = read_answers(path_answers)
-    collection_tokens = tokenisation(collection, path_common_words)
-    print(len(collection_tokens))
-    # >>> 3s59ms to tokenise
-    # print(nb_token(collection_tokens))
-    # >>> 118931
-    # print(collection_tokens[103])
-    # >>> [['cope', 'console'], ['each', year', ..]] # pas de mots clés
+    collection_tokens = tokenisation(collection, path_common_words, stemming=True)
+    print(collection_tokens[39])
+    # ['secant', 'method', 'simultan', 'nonlinear', 'equat', 'procedur', 'simultan', 'solut', 'system', 'necessarili', 'linear', 'equat', 'general', 'secant', 'method', 'singl', 'function', 'variabl']
+    print(nb_token(collection_tokens))
+    # >>> 108113
     index_inv = build_index_inv(collection_tokens)
     # >>> 0.13s to build index_inv
     # print(len(index_inv))
