@@ -16,7 +16,7 @@ def build_index_inv(collection_tokens):
     index_inv = {}
     for docid, tokens in collection_tokens.items():
         for token in tokens:
-            long = len(collection_tokens[docid])
+            long = len(tokens)
             if token not in index_inv:
                 index_inv[token] = {docid: 1/long}
             else:
@@ -60,7 +60,7 @@ def graphe_frequence_rang(index_inv, collection_tokens):
     plt.show()
 
 
-def compute_similarity(vec_request, vec_collections, threshold=0.2):
+def compute_similarity(vec_request, vec_collections, threshold=0.5):
     """
     Calcule la similarité entre la requête vectorisée et chaque document vectorisé
     Renvoie la liste des documents dont la similarité est supérieure au seuil
@@ -82,38 +82,39 @@ def compute_similarity(vec_request, vec_collections, threshold=0.2):
     return simil_request
 
 
-def boolean_request(mot1, op, mot2, index_inv, request_type):
+def boolean_request(word1, op, word2, index_inv):
     """
     Cette fonction permet d'effectuer une recherche booleenne a partir d'une collection tokenise
     """
-    if request_type not in ('T', 'W', 'K'):
-        raise ValueError("type should be in ('T', 'W', 'K'), is {}".format(request_type))
 
-    mot1, mot2 = mot1.lower(), mot2.lower()
-
-    docids_mot1 = []
-    docids_mot2 = []
+    word1, word2 = word1.lower(), word2.lower()
+    from nltk.stem.snowball import SnowballStemmer
+    stemmer = SnowballStemmer("english")
+    word1, word2 = stemmer.stem(word1), stemmer.stem(word2)
 
     try:
-        docids_mot1 = [key for key in index_inv[mot1] if index_inv[mot1][key][request_type] != 0]
-        docids_mot2 = [key for key in index_inv[mot2] if index_inv[mot2][key][request_type] != 0]
+        docids_word1 = list(index_inv[word1].keys())
     except KeyError:
-        pass
+        docids_word1 = []
+    try:
+        docids_word2 = list(index_inv[word2].keys())
+    except KeyError:
+        docids_word2 = []
 
     docids_request = []
     if op == "AND":
-        for elt in docids_mot1:
-            if elt in docids_mot2:
+        for elt in docids_word1:
+            if elt in docids_word2:
                 docids_request.append(elt)
     elif op == "OR":
-        for elt in docids_mot1:
+        for elt in docids_word1:
             docids_request.append(elt)
-        for elt in docids_mot2:
+        for elt in docids_word2:
             if elt not in docids_request:
                 docids_request.append(elt)
     elif op == "NOT":
-        for elt in docids_mot1:
-            if elt not in docids_mot2:
+        for elt in docids_word1:
+            if elt not in docids_word2:
                 docids_request.append(elt)
     else:
         raise ValueError("You should enter a valid operator")
