@@ -3,8 +3,6 @@
 
 # Importation des librairies
 from math import log, sqrt
-import matplotlib.pyplot as plt
-import numpy as np
 
 
 class BooleanVectorizer:
@@ -117,12 +115,60 @@ class TfIdfVectorizer:
 
 
 class FreqNormVectorizer:
+    """
+    Classe permettant de vectoriser un corpus et une requête selon la méthode fréquence normée
+    """
 
-    def __init__(self):
-        pass
+    def __init__(self, vectorize_request=False):
+        self.__inversed_index = []
+        self.__vectorize_request = vectorize_request
 
-    def fit(self):
-        pass
+    def fit_transform(self, inversed_index, collection_tokens):
+        """
+        Apprend la vectorisation du corpus à partir d'un index inversé et d'une collection de tokens
+        """
+        self.__inversed_index = inversed_index
+        vec_matrix = {doc_id: [0 for _ in range(len(inversed_index))] for doc_id in collection_tokens}
 
-    def transform(self):
-        pass
+        for i, term in enumerate(inversed_index):
+            # doc_id where term is present
+            doc_ids = [doc_id for doc_id in inversed_index[term] if inversed_index[term][doc_id] != 0]
+
+            # inversed index vectorization
+            for doc_id in doc_ids:
+                nb_mots_doc = len(collection_tokens[doc_id])
+                tf = nb_mots_doc * inversed_index[term][doc_id]
+                vec_matrix[doc_id][i] = tf
+
+        # normalization per document
+        for doc_id in vec_matrix:
+            freq_max = max(vec_matrix[doc_id])
+            n_d = 1 / sqrt(freq_max) if freq_max != 0 else 0
+            for term in range(len(vec_matrix[doc_id])):
+                vec_matrix[doc_id][term] = n_d * vec_matrix[doc_id][term]
+
+        return vec_matrix
+
+    def transform(self, requests_term: dict):
+        """
+        Vectorise une liste de requête à partir de l'apprentissage précédent
+        """
+        if len(self.__inversed_index) == 0:
+            raise InterruptedError("method fit should be call first.")
+        vec_request = {}
+        for index, query in requests_term.items():
+            vec_req = []
+            for i, term in enumerate(self.__inversed_index):
+                if self.__vectorize_request:
+                    tf_request = len([1 for _ in query if _ == term])
+                    vec_req.append(tf_request)
+                else:
+                    vec_req.append(1) if term in query else vec_req.append(0)
+
+            if self.__vectorize_request:
+                n_d = 1 / sqrt(max(vec_req)) if max(vec_req) != 0 else 0
+                for term in range(len(vec_req)):
+                    vec_req[term] = n_d * vec_req[term]
+
+            vec_request[index] = vec_req
+        return vec_request

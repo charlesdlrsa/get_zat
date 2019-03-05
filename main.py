@@ -9,6 +9,7 @@ from file_manager import read_file, read_answers
 from evaluation import compute_precision_recall
 from nlp_processing import tokenisation, nb_tokens
 from browser import build_index_inv
+from vectorizers import BooleanVectorizer, TfIdfVectorizer, FreqNormVectorizer
 
 
 if __name__ == '__main__':
