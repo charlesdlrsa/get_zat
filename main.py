@@ -6,27 +6,34 @@ import os
 from datetime import datetime
 from file_manager import read_file, read_answers
 from nlp_processing import tokenisation, nb_token
-from browser import build_index_inv, graphe_frequence_rang, boolean_request, vector_request, compute_precision
+from browser import build_index_inv, graphe_frequence_rang, boolean_request, vector_request
+from evaluation import compute_precision_recall
 
 
 if __name__ == '__main__':
 
+    # Définition des chemins vers les données
     path_cacm = os.path.join('cacm', 'cacm.all')
     path_questions = os.path.join('cacm', 'query.text')
     path_answers = os.path.join('cacm', 'qrels.text')
     path_common_words = os.path.join('cacm', 'common_words')
+
+    # Lecture de chaque fichiers
     collection = read_file(path_cacm, [".T", ".W", ".K"])
-    print(len(collection))
     questions = read_file(path_questions, [".W"])
     answers = read_answers(path_answers)
+
+    # Tokenisation
     collection_tokens = tokenisation(collection, path_common_words)
-    print(len(collection_tokens))
+
     # >>> 3s59ms to tokenise
     # print(nb_token(collection_tokens))
     # >>> 118931
     # print(collection_tokens[103])
     # >>> [['cope', 'console'], ['each', year', ..]] # pas de mots clés
     index_inv = build_index_inv(collection_tokens)
+    print(questions)
+    exit(0)
     # >>> 0.13s to build index_inv
     # print(len(index_inv))
     # >>> 9723
@@ -52,7 +59,7 @@ if __name__ == '__main__':
     # print('vector request with norm : ', doclist_norm)
     # print('vector request with freq : ', doc_list_f)
 
-    precision = compute_precision(questions, 'W', index_inv, path_common_words, collection_tokens, 'tfidf', answers)
-    print(precision)
-
-
+    precision, recall = compute_precision_recall(questions, 'W', index_inv, path_common_words, collection_tokens,
+                                                 'tfidf', answers, threshold=0.15)
+    print('precision : {}'.format(precision))
+    print('rappel : {}'.format(recall))

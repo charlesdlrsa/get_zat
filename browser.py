@@ -90,7 +90,7 @@ def vectorization_bool(req_term, request_type, index_inv, collection_tokens):
     return q, d
 
 
-def vectorization_tfidf(req_term, request_type, index_inv, collection_tokens, norm=False):
+def vectorization_tfidf(req_term, request_type, index_inv, collection_tokens, norm=False, vectorize_request=False):
     """
     Vectorise la requête et le corpus selon la méthode TF-IDF
     Avec l'argument norm, la requête est préalablement normalisée
@@ -105,34 +105,37 @@ def vectorization_tfidf(req_term, request_type, index_inv, collection_tokens, no
     i = 0
     for term in index_inv:
 
-        if term in req_term:
-            # request vectorization
-            q.append(1)
+        # list of doc_id where term is present
+        doc_ids = [key for key in index_inv[term] if index_inv[term][key][request_type] != 0]
+        idf = log(nb_docs / len(doc_ids), 10) if len(doc_ids) != 0 else 0
 
-            # list of doc_id where term is present
-            doc_ids = [key for key in index_inv[term] if index_inv[term][key][request_type] != 0]
-            idf = log(nb_docs / len(doc_ids), 10) if len(doc_ids) != 0 else 0
-            sum_d = 0
-            for k in doc_ids:
-                nb_mots_doc = len(collection_tokens[k][map_request_type[request_type]])
-                tf = nb_mots_doc * index_inv[term][k][request_type]
-                if norm:
-                    d[k-1][i] = (1 + log(tf)) * idf
-                else:
-                    d[k-1][i] = (1 + log(tf, 10)) * idf
-                sum_d += d[k - 1][i]
-            i += 1
+        # request vectorization
+        if vectorize_request:
+            tf_request = len([1 for _ in req_term if _ == term])
+            q.append((1 + log(tf_request, 10)) * idf) if tf_request != 0 else q.append(0)
         else:
-            q.append(0)
-            i += 1
+            q.append(1) if term in req_term else q.append(0)
+
+        for k in doc_ids:
+            nb_mots_doc = len(collection_tokens[k][map_request_type[request_type]])
+            tf = nb_mots_doc * index_inv[term][k][request_type]
+            if norm:
+                d[k-1][i] = (1 + log(tf)) * idf
+            else:
+                d[k-1][i] = (1 + log(tf, 10)) * idf
+        i += 1
 
     # for normalized tf_idf
     if norm:
         for doc_id in range(len(d)):
-            sum_d = sum([w for w in d[doc_id]])
+            sum_d = sum(d[doc_id])
             n_d = 1 / sqrt(sum_d) if sum_d != 0 else 0
             for term in range(len(d[doc_id])):
                 d[doc_id][term] = n_d * d[doc_id][term]
+        if vectorize_request:
+            n_d = 1 / sqrt(sum(q)) if sum(q) != 0 else 0
+            for term in range(len(q)):
+                q[term] = n_d * q[term]
 
     return q, d
 
@@ -177,7 +180,7 @@ def vectorization_freq_norm(req_term, request_type, index_inv, collection_tokens
     return q, d
 
 
-def compute_similarity(vec_request, vec_collections, threshold=0.8):
+def compute_similarity(vec_request, vec_collections, threshold=0.2):
     """
     Calcule la similarité entre la requête vectorisée et chaque document vectorisé
     Renvoie la liste des documents dont la similarité est supérieure au seuil
@@ -188,16 +191,15 @@ def compute_similarity(vec_request, vec_collections, threshold=0.8):
         v2 = np.array(v2)
         return np.vdot(v1, v2) / (np.linalg.norm(v1) * norm_v2)
 
-    simil = []
-    norm_request = np.linalg.norm(vec_request)
-    for i in range(len(vec_collections)):
-        if sum(vec_collections[i]) == 0:
-            simil.append(0)
-        else:
-            simil.append(sim(vec_collections[i], vec_request, norm_request))
-
-    doc_similarity = list(map(lambda el: (el[0] + 1, el[1]), enumerate(simil)))
-    return [el[0] for el in doc_similarity if el[1] > threshold]
+    simil_request = {}
+    for index, query_vector in vec_request.items():
+        norm_query = np.linalg.norm(query_vector)
+        relevant_doc_ids = []
+        for doc_id, doc_vector in vec_collections.items():
+            if sum(doc_vector) != 0 and sim(doc_vector, query_vector, norm_query) > threshold:
+                relevant_doc_ids.append(doc_id)
+        simil_request[index] = relevant_doc_ids
+    return simil_request
 
 
 def boolean_request(mot1, op, mot2, index_inv, request_type):
@@ -253,6 +255,7 @@ def vector_request(request, request_type, index_inv, path_common_words, collecti
     col = {0: [request]}
     req_term = tokenisation(col, path_common_words)[0][0]
 
+    # il faudrait vectoriser indépendamment le corpus et la requête pour gagner en efficacité !
     if ponderation == 'bool':
         vec_request, vec_collection = vectorization_bool(req_term, request_type, index_inv, collection_tokens)
     elif ponderation == 'tfidf':
@@ -268,6 +271,7 @@ def vector_request(request, request_type, index_inv, path_common_words, collecti
     doc_similarity = compute_similarity(vec_request, vec_collection, threshold=threshold)
 
     return doc_similarity
+
 
 
 
