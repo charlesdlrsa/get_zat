@@ -4,14 +4,14 @@ _Auteurs : Erwan de Kergaradec et Charles de la Roche Saint André_
 
 ## Introduction
 
-Vous trouverez dans ce `ReadME` l'ensemble de nos résultats concernant notre projet scolaire de "Fondements à la recherche d'informations". <br>
-Chacune des parties détaille le contenu de nos fichiers .py ainsi que les rôles respectifs de nos fonctions. <br>
+Vous trouverez dans ce `ReadME` l'ensemble de nos résultats concernant notre projet scolaire de "Fondements à la recherche d'informations". Ce projet scolaire s'appuie sur le dataset CACM contenant un ensemble de documents, questions et réponses. <br>
+Chacune des parties détaille le contenu de nos fichiers `.py` ainsi que les rôles respectifs de nos fonctions. <br>
 La dernière partie explique comment lancer notre code pour retrouver les mêmes résultats et faire vos propres recherches sur le corpus CACM.
 
 ## Lecture des datasets
 
 Toutes les fonctions de lecture des datasets sont présentes dans notre fichier `file_manager.py`. <br>
-Elles nous permettent de lire nos datasets de corpus, questions et réponses associées et de sotcker les informations sous forme de dictionnaires python dont : 
+Elles nous permettent de lire nos datasets de documents, questions et réponses associées et de stocker les informations sous forme de dictionnaires python dont : 
 - les clefs sont les identifiants des documents, questions et réponses
 - les valeurs sont les données textuelles associées à chaque document, question, réponse
 
@@ -40,23 +40,29 @@ Notre index inversé est un dictionnaire dont :
 - les clefs sont les tokens de notre collection de documents
 - les valeurs sont des dictionnaires dont:
   - les clefs sont les identifiants de nos documents contentant le token
-  - les valeurs sont les fréquences d'apparition du token dans le dit-document
+  - les valeurs sont les fréquences d'apparition du token dans le document en question
   
-Nous avons pu déterminer de cet index inversé la taille de notre vocabulaire : 
- 
+Nous avons pu déterminer de cet index inversé la taille de notre vocabulaire : **5405 tokens**.
  
 
 ## Moteur de recherche booléen
 
 Nous avons mis en place un modèle de recherche booléen dans le fichier `browser.py`. <br>
-Ce modèle de recherche assez simpliste sur base sur un opérateur et deux mots clefs que l'on désire rechercher. <br>
-Assez basiquement, on regarde quels documents contiennent le premier mot et quels documents contiennent le second mot, une fois ces deux mots pré-traités de la même manière que notre collection de documents.<br>
-Ensuite, en fonction de l'opérateur (AND, OR, NOT), on renvoie la liste des documents correspondants à notre requête booléenne.
-
+Ce modèle de recherche se base sur une requête contenant deux mots clefs et un opérateur. <br>
+Assez basiquement, on prétraite nos deux mots de la même manière que notre collection de documents, puis on regarde quels documents contiennent le premier mot et quels documents contiennent le second mot. <br>
+Ensuite, en fonction de l'opérateur (AND, OR, NOT), on renvoie la liste triée de documents correspondants à notre requête booléenne.
 
 ## Modèle de recherche vectoriel
 
+### Pondération booléenne
+
+### Pondération tf-idf
+
+### Pondération tf-idf normalisée
+
 ## Evaluation pour la collection CACM
+
+Précision et rappel
 
 ## Expérimentez-vous même !
 
