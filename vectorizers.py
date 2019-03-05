@@ -39,7 +39,7 @@ class BooleanVectorizer:
         for index, query in requests_term.items():
             vec_req = []
             for term in self.__inversed_index:
-                if term in query[0]:
+                if term in query:
                     vec_req.append(1)
                 else:
                     vec_req.append(0)
@@ -52,8 +52,7 @@ class TfIdfVectorizer:
     Classe permettant de vectoriser un corpus et une requête selon la méthode TF-IDF
     """
 
-    def __init__(self, request_type, norm=False, vectorize_request=False):
-        self.__request_type = request_type
+    def __init__(self, norm=False, vectorize_request=False):
         self.__norm = norm
         self.__vectorize_request = vectorize_request
         self.__inversed_index = []
@@ -67,18 +66,16 @@ class TfIdfVectorizer:
         nb_docs = len(collection_tokens)
         vec_matrix = {doc_id: [0 for _ in range(len(inversed_index))] for doc_id in collection_tokens}
 
-        map_request_type = {'T': 0, 'W': 1, 'K': 2}
-
         for i, term in enumerate(inversed_index):
 
             # list of doc_id where term is present
-            doc_ids = [key for key in inversed_index[term] if inversed_index[term][key][self.__request_type] != 0]
+            doc_ids = [doc_id for doc_id in inversed_index[term] if inversed_index[term][doc_id] != 0]
             idf = log(nb_docs / len(doc_ids), 10) if len(doc_ids) != 0 else 0
             self.idf.append(idf)
 
             for doc_id in doc_ids:
-                nb_mots_doc = len(collection_tokens[doc_id][map_request_type[self.__request_type]])
-                tf = nb_mots_doc * inversed_index[term][doc_id][self.__request_type]
+                nb_mots_doc = len(collection_tokens[doc_id])
+                tf = nb_mots_doc * inversed_index[term][doc_id]
                 if self.__norm:
                     vec_matrix[doc_id][i] = (1 + log(tf)) * idf
                 else:
@@ -102,7 +99,6 @@ class TfIdfVectorizer:
             raise InterruptedError("method fit should be call first.")
         vec_request = {}
         for index, query in requests_term.items():
-            query = query[0]
             vec_req = []
             for i, term in enumerate(self.__inversed_index):
                 if self.__vectorize_request:
