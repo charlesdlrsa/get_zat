@@ -6,13 +6,12 @@ from math import log, sqrt
 import matplotlib.pyplot as plt
 import numpy as np
 
-from nlp_processing import tokenisation, nb_token
-from datetime import datetime
+from nlp_processing import tokenisation
 
 
 def build_index_inv(collection_tokens):
     """
-    Cette fonction construit un index inverse a partir d'une collection de tokens
+    Cette fonction construit un index inversé a partir d'une collection de tokens
     """
     dic_sent = {0: 'T', 1: 'W', 2: 'K'}
     index_inv = {}
@@ -76,17 +75,17 @@ def vectorization_bool(req_term, request_type, index_inv, collection_tokens):
     d = [[0 for _ in range(len(index_inv))] for _ in range(len(collection_tokens))]
     i = 0
     for term in index_inv:
-        # request vectorization
-        if term in req_term:
-            q.append(1)
-        else:
-            q.append(0)
-
         # inversed index vectorization
         liste = [key for key in index_inv[term] if index_inv[term][key][request_type] != 0]
         for k in liste:
             d[k-1][i] = 1
         i += 1
+
+        # request vectorization
+        if term in req_term:
+            q.append(1)
+        else:
+            q.append(0)
 
     return q, d
 
@@ -178,9 +177,10 @@ def vectorization_freq_norm(req_term, request_type, index_inv, collection_tokens
     return q, d
 
 
-def compute_similarity(vec_request, vec_collections):
+def compute_similarity(vec_request, vec_collections, threshold=0.8):
     """
     Calcule la similarité entre la requête vectorisée et chaque document vectorisé
+    Renvoie la liste des documents dont la similarité est supérieure au seuil
     """
 
     def sim(v1, v2, norm_v2):
@@ -197,11 +197,7 @@ def compute_similarity(vec_request, vec_collections):
             simil.append(sim(vec_collections[i], vec_request, norm_request))
 
     doc_similarity = list(map(lambda el: (el[0] + 1, el[1]), enumerate(simil)))
-    # sort document by similarity and display the 10 first elements
-    doc_similarity = sorted(doc_similarity, key=lambda el: el[1], reverse=True)
-    doc_similarity = list(map(lambda el: el[0], doc_similarity))[:10]
-
-    return doc_similarity
+    return [el[0] for el in doc_similarity if el[1] > threshold]
 
 
 def boolean_request(mot1, op, mot2, index_inv, request_type):
@@ -245,10 +241,11 @@ def boolean_request(mot1, op, mot2, index_inv, request_type):
     return docids_request
 
 
-def vector_request(request, request_type, index_inv, path_common_words, collection_tokens, ponderation):
+def vector_request(request, request_type, index_inv, path_common_words, collection_tokens, ponderation, threshold=0.8):
     """
-    Cette fonction permet d'effectuer une recherche vectorisée a partir d'une collection tokenise
+    Cette fonction permet d'effectuer une recherche vectorisée a partir d'une collection tokenisée
     On peut choisir la méthode de pondéraion avec l'argument 'ponderation'
+    On peut faire varier le seuil de similarité avec l'argument 'threshold'
     """
 
     if request_type not in ('T', 'W', 'K'):
@@ -268,28 +265,9 @@ def vector_request(request, request_type, index_inv, path_common_words, collecti
     else:
         raise ValueError("ponderation is not correct, should be 'bool', 'tfidf', 'tfidf_norm', 'freq_norm'.")
 
-    doc_similarity = compute_similarity(vec_request, vec_collection)
+    doc_similarity = compute_similarity(vec_request, vec_collection, threshold=threshold)
 
     return doc_similarity
-
-
-def compute_precision(questions, request_type, index_inv, path_common_words, collection_tokens, ponderation, answers):
-
-    returned_docs = {}
-    for index, query in questions.items():
-        returned_docs[index] = vector_request(query[0], request_type, index_inv, path_common_words, collection_tokens, ponderation)
-
-    precision = 0
-    for index, answer in answers.items():
-        tp, fp = 0, 0
-        for doc_id in returned_docs[index]:
-            if doc_id in answer:
-                tp += 1
-            else:
-                fp += 1
-        precision += tp/(tp+fp)
-
-    return precision/len(answers)
 
 
 

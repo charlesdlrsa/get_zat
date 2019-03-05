@@ -21,7 +21,6 @@ def tokenisation(collection, path_common_words):
         for l in file.readlines():
             list_stop_words.append(l[:-1])
 
-    # TODO : filtre qui supprime les chiffres et l'influence sur la taille du vocabulaire
     collection_tokens = {}
     for docid in collection:
         doc_token = []
@@ -29,9 +28,11 @@ def tokenisation(collection, path_common_words):
             sent_token = wordpunct_tokenize(sentence)
             new_sent_token = []
             for word in sent_token:
-                new_word = re.sub(r'[^\w\s]', '', word)
-                if (new_word != '') and (new_word not in list_stop_words):
-                    new_sent_token.append(new_word.lower())
+                word = word.lower()
+                word = re.sub(r'[^\w\s]', '', word)
+                if word != '' and word not in list_stop_words and not word.isdigit():
+                    new_sent_token.append(word)
+
             doc_token.append(new_sent_token)
         collection_tokens[docid] = doc_token
     return collection_tokens
