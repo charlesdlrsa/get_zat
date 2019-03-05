@@ -16,9 +16,9 @@ Elles nous permettent de lire nos datasets de documents, questions et réponses 
 - les valeurs sont les données textuelles associées à chaque document, question, réponse
 
 Voici les différentes informations recoltées sur les collections :
-- collection de documents : 3000 documents
-- collection de questions :  
-- collection de réponses : 
+- collection de documents : 3204 documents
+- collection de questions : 64 questions
+- collection de réponses : 52 réponses
 
 ## Traitement linguistique
 
@@ -30,7 +30,7 @@ Elles nous permettent de :
 - lémantiser les mots
 
 Une fois notre collection de documents tokenisée, nous trouvons les informations suivantes :
-- nombre de tokens de notre collection : 
+- nombre de tokens de notre collection : 108 113 tokens
 - graphe de la fréquence (f) vs rang (r) pour tous les tokens de la collection : 
 
 ## Indexation
