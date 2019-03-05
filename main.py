@@ -27,7 +27,7 @@ if __name__ == '__main__':
     answers = read_answers(path_answers)
 
     # Création d'une requête de test
-    query = {0: 'what is the language of France ?'}
+    query = {0: 'What articles exist which deal with TSS (Time Sharing System), an operating system for IBM computers?'}
 
     # Tokenisation
     collection_tokens = tokenisation(collection, path_common_words, stemming=True)
@@ -52,19 +52,22 @@ if __name__ == '__main__':
 
     # print(boolean_request("language", "AND", "Implementation", index_inv))
 
-    vectorizer = BooleanVectorizer()
+    # Vectorisation booléenne
+    # vectorizer = BooleanVectorizer()
+    # Vectorisation tf-idf
+    vectorizer = TfIdfVectorizer(norm=False, vectorize_request=False)
+    # Vectorisation fréquence-max
+    # vectorizer = FreqNormVectorizer(vectorize_request=False)
+
     vec_collections = vectorizer.fit_transform(index_inv, collection_tokens)
     vec_query = vectorizer.transform(query_tokens)
 
-    result = compute_similarity(vec_query, vec_collections, threshold=0.5)
+    result = compute_similarity(vec_query, vec_collections, threshold=0.2)
     print(result)
 
-    # precision, recall = compute_precision_recall(questions, 'W', index_inv, path_common_words, collection_tokens,
-    #                                             'tfidf', answers, threshold=0.15)
+    # precision, recall = compute_precision_recall(questions, collection_tokens, index_inv, answers,
+    #                                             'tf-idf', threshold=0.15, vectorize_request=False)
     # print('precision : {}'.format(precision))
     # print('rappel : {}'.format(recall))
-
-    # precision = compute_precision(questions, 'W', index_inv, path_common_words, collection_tokens, 'tfidf', answers)
-    # print(precision)
 
 
