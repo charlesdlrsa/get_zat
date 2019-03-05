@@ -13,23 +13,17 @@ def build_index_inv(collection_tokens):
     """
     Cette fonction construit un index inversé a partir d'une collection de tokens
     """
-    dic_sent = {0: 'T', 1: 'W', 2: 'K'}
     index_inv = {}
-    for docid in collection_tokens:
-        for i, el in enumerate(collection_tokens[docid]):
-            for words in el:
-                long = len(collection_tokens[docid][i])
-                dic_term = {'T': 1 / long if i == 0 else 0,
-                            'W': 1 / long if i == 1 else 0,
-                            'K': 1 / long if i == 2 else 0,
-                            }
-                if words not in index_inv:
-                    index_inv[words] = {docid: dic_term}
+    for docid, tokens in collection_tokens.items():
+        for token in tokens:
+            long = len(collection_tokens[docid])
+            if token not in index_inv:
+                index_inv[token] = {docid: 1/long}
+            else:
+                if docid in index_inv[token]:
+                    index_inv[token][docid] += 1/long
                 else:
-                    if docid in index_inv[words]:
-                        index_inv[words][docid][dic_sent[i]] += 1/long
-                    else:
-                        index_inv[words][docid] = dic_term
+                    index_inv[token][docid] = 1/long
 
     return index_inv
 
