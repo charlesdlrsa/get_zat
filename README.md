@@ -1,8 +1,12 @@
-# Get_zat: notre projet de recherche d'informations
+# Get_zat : notre projet de recherche d'informations
 
-_Auteurs: Erwan de Kergaradec et Charles de la Roche Saint André_
+_Auteurs : Erwan de Kergaradec et Charles de la Roche Saint André_
 
 ## Introduction
+
+Vous trouverez dans ce ReadME l'ensemble de nos résultats concernant notre projet scolaire de "Fondements à la recherche d'informations".
+Chacune des parties explique le contenu de nos fichiers .py ainsi que leurs rôles respectifs.
+La dernière partie détaille comment lancer notre code pour retrouver nos résultats et faire vos propres recherches sur le corpus CACM.
 
 ## Lecture des datasets
 
