@@ -21,9 +21,8 @@ def read_file(path, tags):
             if l[0] == ".":  # on est face à un marqueur
                 marqueur = l[:2]
                 if marqueur == ".I":
-                    # doc_id = int(l[3:].strip())
                     doc_id += 1
-                    collection[doc_id] = []
+                    collection[doc_id] = ""
                     continue
                 elif marqueur in tags:
                     continue_read = True
@@ -34,11 +33,12 @@ def read_file(path, tags):
                     continue
 
             if continue_read:
+                collection[doc_id] += l.strip()
                 if change_marqueur:
-                    collection[doc_id].append(l.strip() + " ")
+                    collection[doc_id] += ". "
                     change_marqueur = False
                 else:
-                    collection[doc_id][-1] += l.strip() + " "
+                    collection[doc_id] += " "
 
     return collection
 

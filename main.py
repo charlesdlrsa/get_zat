@@ -4,10 +4,11 @@
 # Importation des librairies
 import os
 from datetime import datetime
+
 from file_manager import read_file, read_answers
-from nlp_processing import tokenisation, nb_token
-from browser import build_index_inv, graphe_frequence_rang, boolean_request, vector_request
 from evaluation import compute_precision_recall
+from nlp_processing import tokenisation, nb_tokens
+from browser import build_index_inv
 
 
 if __name__ == '__main__':
@@ -32,13 +33,16 @@ if __name__ == '__main__':
     # print(collection_tokens[103])
     # >>> [['cope', 'console'], ['each', year', ..]] # pas de mots clés
     index_inv = build_index_inv(collection_tokens)
-    print(questions)
-    exit(0)
     # >>> 0.13s to build index_inv
     # print(len(index_inv))
     # >>> 9723
     # print(index_inv['language'])
     # >>> {1: {'T': 0.2, 'W': 0, 'K': 0}, 82: {'T': 0.16666666666666666, 'W': 0.07692307692307693, 'K': 0}, ..}
+    questions = read_file(path_questions, [".W"])
+    answers = read_answers(path_answers)
+    collection_tokens = tokenisation(collection, path_common_words, stemming=True)
+    # 108113
+    index_inv = build_index_inv(collection_tokens)
 
     # graphe_frequence_rang(index_inv, collection_tokens)
     # result = boolean_request("language", "AND", "Implementation", index_inv, 'T')
@@ -63,3 +67,7 @@ if __name__ == '__main__':
                                                  'tfidf', answers, threshold=0.15)
     print('precision : {}'.format(precision))
     print('rappel : {}'.format(recall))
+
+    # precision = compute_precision(questions, 'W', index_inv, path_common_words, collection_tokens, 'tfidf', answers)
+    # print(precision)
+
