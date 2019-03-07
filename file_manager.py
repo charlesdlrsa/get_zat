@@ -5,7 +5,7 @@
 import os
 
 
-def read_file(path, tags):
+def read_file(path: str, tags: list):
     """
     Fonction permettant de lire le fichier en extrayant uniquement certaines balises
     """
@@ -43,7 +43,7 @@ def read_file(path, tags):
     return collection
 
 
-def read_answers(path):
+def read_answers(path: str):
     """
     Fonction permettant de lire le fichier en extrayant uniquement les doc_ids
     """

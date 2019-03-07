@@ -3,10 +3,11 @@
 
 # Importation des librairies
 from browser import compute_similarity, compute_vectors
+import matplotlib.pyplot as plt
 
 
-def compute_precision_recall(query_tokens, collection_tokens, index_inv, answers,
-                             vec_type, threshold=0.5, vectorize_request=False):
+def compute_precision_recall(query_tokens: dict, collection_tokens: dict, index_inv: dict, answers: dict,
+                             vec_type: str, threshold=0.5, vectorize_request=False):
     """
     Calcule la précision et le rappel de notre moteur de recherche entrainé sur le corpus 'collection_tokens'.
     On évalue les requêtes tokenisées 'query_tokens' en fonction du vrai résultat 'answers'
@@ -54,8 +55,25 @@ def compute_other_metrics(precision: int, recall: int, alpha: float):
     return f_measure, e_measure
 
 
-def display_graph_pr():
+def display_graph_pr(query_tokens: dict, collection_tokens: dict, index_inv: dict, answers: dict,
+                     vec_type: str, vectorize_request=False):
     """
-    Cette fonction trace le graphe précision-rappel
+    Cette fonction trace le graphe précision-rappel en faisant varier 'threshold'
     """
-    pass
+    thresholds = [0, 0.01, 0.03, 0.05, 0.08, 0.1, 0.15, 0.2, 0.25, 0.3]
+    precisions = []
+    recalls = []
+    for threshold in thresholds:
+        precision, recall = compute_precision_recall(query_tokens, collection_tokens, index_inv, answers,
+                                                     vec_type, vectorize_request=vectorize_request, threshold=threshold)
+        precisions.append(precision)
+        recalls.append(recall)
+
+    plt.figure(figsize=(15, 6))
+    plt.plot(recalls, precisions, color='b')
+    plt.xlim(0, 1)
+    plt.ylim(0, 1)
+    plt.xlabel("Recall")
+    plt.ylabel("Precision")
+    plt.title("Graphe Précision - Rappel")
+    plt.show()

@@ -8,7 +8,7 @@ import os
 import re
 
 
-def tokenisation(collection, path_common_words, stemming=False):
+def tokenisation(collection: dict, path_common_words: str, stemming=False):
     """
     Cette fonction tokenise les mots, enlève la ponctuation, les mots communs et met en minuscule
     """
@@ -40,7 +40,7 @@ def tokenisation(collection, path_common_words, stemming=False):
     return collection_tokens
 
 
-def nb_tokens(collection_tokens):
+def nb_tokens(collection_tokens: dict):
     """
     Cette fonction compte le nombre de tokens dans une collection donnee
     """

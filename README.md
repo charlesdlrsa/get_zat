@@ -55,17 +55,41 @@ Ensuite, en fonction de l'opérateur (AND, OR, NOT), on renvoie la liste triée 
 
 ## Modèle de recherche vectoriel
 
+Nous avons ensuite mis en place un modèle de recherche plus élaboré à partir d'un modèle vectoriel se trouvant dans le fichier `vectorizers.py`. <br>
+Ce fichier contient plusieurs classes correspondant aux pondérations ci-dessous : <br>
+Il s'agit ici de vectoriser chaque phrase dans une représentation de tout le vocabulaire de notre corpus. La dimension de chaque vecteur correspond donc à la taille du vocabulaire. <br>
+
 ### Pondération booléenne
+ 
+Dans le cas de la pondération booléenne, la vectorisation est assez simple : le vecteur d'une phrase contient un 1 dans la colonne _i_ si le mot représenté par la colonne _i_ est contenu dans cette phrase, sinon cela vaut 0.
+La requête est vectorisée de la même manière. On peut alors cacluler une distance de similarité entre chaque document et la requête ce qui permet de renvoyer tous les documents 'proches' de la requête.
 
 ### Pondération tf-idf
 
+Cette fois-ci le poids associé à la colonne _i_ est différent : on calcule la fréquence d'apparition du mot représenté par la colonne _i_ dans chaque phrase ainsi que sa fréquence d'apparition dans tout le corpus. <br>
+Cela permet d'accorder moins d'importance aux mots très présents dans le corpus et se focaliser sur les mots-clés. <br>
+La requête peut ici est vectorisée selon la méthode booléenne ou tf-idf.  <br>
+On peut donc encore calculer une distance de similarité entre ces vecteurs. <br>
+
 ### Pondération tf-idf normalisée
+
+Au sein de cette méthode de pondération, il s'agit de reprendre la pondération tf-idf mais on normalise chaque vecteur. <br>
 
 ### Pondération fréquence normalisée
 
+Dans ce cas, on calcule encore la fréquence du mot représenté par la colonne _i_ mais on divise cette valeur par la fréquence maximale pour chaque doc_id, ce qui assure également des poids compris entre 0 et 1 mais propose une variante. <br>
+
 ## Evaluation pour la collection CACM
 
-Précision et rappel
+Afin d'évaluer la collection CACM, nous avons d'abord réalisé un apprentissage sur cette collection (en choisissant un type de vectorisation). <br>
+Nous nous sommes servis des fichiers query.txt et qrels.txt afin de tester notre moteur de recherche ainsi entrainé. <br>
+Il s'agit de prédire les documents pertinents pour chaque requête de query.txt et de le comparer aux réponses du fichiers qrels.txt. Ceci nous permet de calculer la précision et le rappel pour un seuil de similarité fixé.
+
+Afin de tracer le graphe Précision-Rappel ci-dessous, nous avons fait varier le seuil de similarité (faisant ainsi varier le degré de précision du moteur de recherche).
+Voici le graphe obtenu : 
+
+![](graphe_pr.png)
+
 
 ## Expérimentez-vous même !
 

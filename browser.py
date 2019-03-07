@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def boolean_request(word1, op, word2, index_inv):
+def boolean_request(word1: str, op: str, word2: str, index_inv: dict):
     """
     Cette fonction permet d'effectuer une recherche booleenne a partir d'une collection tokenise
     """
@@ -49,7 +49,7 @@ def boolean_request(word1, op, word2, index_inv):
     return docids_request
 
 
-def build_index_inv(collection_tokens):
+def build_index_inv(collection_tokens: dict):
     """
     Cette fonction construit un index inversé a partir d'une collection de tokens
     """
@@ -67,7 +67,7 @@ def build_index_inv(collection_tokens):
     return index_inv
 
 
-def graphe_frequence_rang(index_inv, collection_tokens):
+def graphe_frequence_rang(index_inv: dict, collection_tokens: dict):
     """
     Trace le graphe de la frequence des termes en fonction de leur rang
     """
@@ -98,12 +98,12 @@ def graphe_frequence_rang(index_inv, collection_tokens):
     plt.show()
 
 
-def compute_similarity(vec_request, vec_collections, threshold=0.5):
+def compute_similarity(vec_request: dict, vec_collections: dict, threshold=0.5):
     """
     Calcule la similarité entre la requête vectorisée et chaque document vectorisé
     Renvoie la liste des documents dont la similarité est supérieure au seuil
     """
-    def sim(v1, v2, norm_v2):
+    def sim(v1: list, v2: list, norm_v2: float):
         v1 = np.array(v1)
         v2 = np.array(v2)
         return np.vdot(v1, v2) / (np.linalg.norm(v1) * norm_v2)
@@ -113,13 +113,14 @@ def compute_similarity(vec_request, vec_collections, threshold=0.5):
         norm_query = np.linalg.norm(query_vector)
         relevant_doc_ids = []
         for doc_id, doc_vector in vec_collections.items():
-            if sum(doc_vector) != 0 and sim(doc_vector, query_vector, norm_query) > threshold:
+            if sum(doc_vector) != 0 and sim(doc_vector, query_vector, norm_query) >= threshold:
                 relevant_doc_ids.append(doc_id)
         simil_request[index] = relevant_doc_ids
     return simil_request
 
 
-def compute_vectors(query_tokens, collection_tokens, index_inv, vec_type, vectorize_request=False):
+def compute_vectors(query_tokens: dict, collection_tokens: dict, index_inv: dict,
+                    vec_type: str, vectorize_request=False):
     """
     Cette fonction permet d'effectuer une recherche vectorisée a partir d'une collection tokenisée
     On peut choisir la méthode de pondéraion avec l'argument 'ponderation'
