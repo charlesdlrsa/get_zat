@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 
 # Importation des librairies
-from browser import compute_similarity
-from vectorizers import BooleanVectorizer, TfIdfVectorizer, FreqNormVectorizer
+from browser import compute_similarity, compute_vectors
+import matplotlib.pyplot as plt
 
 
-def compute_precision_recall(query_tokens, collection_tokens, index_inv, answers,
-                             vec_type, threshold=0.5, vectorize_request=False):
+def compute_precision_recall(query_tokens: dict, collection_tokens: dict, index_inv: dict, answers: dict,
+                             vec_type: str, threshold=0.5, vectorize_request=False):
     """
     Calcule la précision et le rappel de notre moteur de recherche entrainé sur le corpus 'collection_tokens'.
     On évalue les requêtes tokenisées 'query_tokens' en fonction du vrai résultat 'answers'
@@ -20,26 +20,10 @@ def compute_precision_recall(query_tokens, collection_tokens, index_inv, answers
     nb_fp = 0
     nb_fn = 0
 
-    if vec_type == 'boolean':
-        vectorizer = BooleanVectorizer()
-        vec_collections = vectorizer.fit_transform(index_inv, collection_tokens)
-        vec_query = vectorizer.transform(query_tokens)
-    elif vec_type == 'tf-idf':
-        vectorizer = TfIdfVectorizer(norm=False, vectorize_request=vectorize_request)
-        vec_collections = vectorizer.fit_transform(index_inv, collection_tokens)
-        vec_query = vectorizer.transform(query_tokens)
-    elif vec_type == 'tf-idf-norm':
-        vectorizer = TfIdfVectorizer(norm=True, vectorize_request=vectorize_request)
-        vec_collections = vectorizer.fit_transform(index_inv, collection_tokens)
-        vec_query = vectorizer.transform(query_tokens)
-    elif vec_type == 'freq-norm':
-        vectorizer = FreqNormVectorizer(vectorize_request=vectorize_request)
-        vec_collections = vectorizer.fit_transform(index_inv, collection_tokens)
-        vec_query = vectorizer.transform(query_tokens)
-    else:
-        raise ValueError("'vec_type' should be in {'boolean', 'tf-idf', 'tf-idf-norm', 'freq-max'")
-
+    vec_query, vec_collections = compute_vectors(query_tokens, collection_tokens, index_inv,
+                                                 vec_type, vectorize_request)
     query_result = compute_similarity(vec_query, vec_collections, threshold=threshold)
+
     for index, relevant_doc_ids in query_result.items():
 
         if index not in answers:  # on évalue pas sur les documents pas présents dans le fichier de réponse
@@ -68,9 +52,28 @@ def compute_other_metrics(precision: int, recall: int, alpha: float):
     e_measure = 1 - 1 / (alpha / precision + (1 - alpha) / recall)
     f_measure = 1 - e_measure
 
+    return f_measure, e_measure
 
-def display_graph_pr():
+
+def display_graph_pr(query_tokens: dict, collection_tokens: dict, index_inv: dict, answers: dict,
+                     vec_type: str, vectorize_request=False):
     """
-    Cette fonction trace le graphe précision-rappel
+    Cette fonction trace le graphe précision-rappel en faisant varier 'threshold'
     """
-    pass
+    thresholds = [0, 0.01, 0.03, 0.05, 0.08, 0.1, 0.15, 0.2, 0.25, 0.3]
+    precisions = []
+    recalls = []
+    for threshold in thresholds:
+        precision, recall = compute_precision_recall(query_tokens, collection_tokens, index_inv, answers,
+                                                     vec_type, vectorize_request=vectorize_request, threshold=threshold)
+        precisions.append(precision)
+        recalls.append(recall)
+
+    plt.figure(figsize=(15, 6))
+    plt.plot(recalls, precisions, color='b')
+    plt.xlim(0, 1)
+    plt.ylim(0, 1)
+    plt.xlabel("Recall")
+    plt.ylabel("Precision")
+    plt.title("Graphe Précision - Rappel")
+    plt.show()

@@ -6,7 +6,7 @@ import os
 from datetime import datetime
 
 from file_manager import read_file, read_answers
-from evaluation import compute_precision_recall
+from evaluation import compute_precision_recall, display_graph_pr
 from nlp_processing import tokenisation, nb_tokens
 
 from browser import build_index_inv, graphe_frequence_rang, boolean_request, compute_similarity
@@ -55,19 +55,21 @@ if __name__ == '__main__':
     # Vectorisation booléenne
     # vectorizer = BooleanVectorizer()
     # Vectorisation tf-idf
-    vectorizer = TfIdfVectorizer(norm=False, vectorize_request=False)
+    # vectorizer = TfIdfVectorizer(norm=False, vectorize_request=False)
     # Vectorisation fréquence-max
     # vectorizer = FreqNormVectorizer(vectorize_request=False)
 
-    vec_collections = vectorizer.fit_transform(index_inv, collection_tokens)
-    vec_query = vectorizer.transform(query_tokens)
+    # vec_collections = vectorizer.fit_transform(index_inv, collection_tokens)
+    # vec_query = vectorizer.transform(query_tokens)
 
-    result = compute_similarity(vec_query, vec_collections, threshold=0.2)
-    print(result)
+    # result = compute_similarity(vec_query, vec_collections, threshold=0.2)
+    # print(result)
 
     # precision, recall = compute_precision_recall(questions, collection_tokens, index_inv, answers,
     #                                             'tf-idf', threshold=0.15, vectorize_request=False)
     # print('precision : {}'.format(precision))
     # print('rappel : {}'.format(recall))
+
+    display_graph_pr(questions, collection_tokens, index_inv, answers, 'tf-idf', vectorize_request=False)
 
 

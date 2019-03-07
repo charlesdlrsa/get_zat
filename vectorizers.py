@@ -13,7 +13,7 @@ class BooleanVectorizer:
     def __init__(self):
         self.__inversed_index = []
 
-    def fit_transform(self, inversed_index, collection_tokens):
+    def fit_transform(self, inversed_index: dict, collection_tokens: dict):
         """
         Apprend la vectorisation du corpus à partir d'un index inversé et d'une collection de tokens
         """
@@ -56,7 +56,7 @@ class TfIdfVectorizer:
         self.__inversed_index = []
         self.idf = []
 
-    def fit_transform(self, inversed_index, collection_tokens):
+    def fit_transform(self, inversed_index: dict, collection_tokens: dict):
         """
          Apprend la vectorisation du corpus à partir d'un index inversé et d'une collection de tokens
         """
@@ -123,7 +123,7 @@ class FreqNormVectorizer:
         self.__inversed_index = []
         self.__vectorize_request = vectorize_request
 
-    def fit_transform(self, inversed_index, collection_tokens):
+    def fit_transform(self, inversed_index: dict, collection_tokens: dict):
         """
         Apprend la vectorisation du corpus à partir d'un index inversé et d'une collection de tokens
         """
