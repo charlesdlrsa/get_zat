@@ -34,7 +34,7 @@ if __name__ == '__main__':
     index_inv = build_index_inv(collection_tokens)
     print("Taille de notre vocabulaire : ", len(index_inv), "\n")
     print("Index inversé du mot 'variable' : \n", index_inv['variabl'], "\n")
-    print("Fermez la fenêtre du graphe pour que le code continue. \n")
+    print("Fermez la fenêtre du graphe fréquence-rang des tokens pour que le code continue. \n")
     display_graph_freq_rank(index_inv, collection_tokens)
 
     # Modèle de recherche booléen
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     #                                             'tf-idf', threshold=0.15, vectorize_request=False)
     # print('precision : {}'.format(precision))
     # print('rappel : {}'.format(recall))
-
+    # print("Fermez la fenêtre du graphe pour que le code continue. \n")
     # display_graph_pr(questions, collection_tokens, index_inv, answers, 'tf-idf', vectorize_request=False)
 
 
