@@ -55,18 +55,17 @@ Ensuite, en fonction de l'opérateur (AND, OR, NOT), on renvoie la liste triée 
 
 ## Modèle de recherche vectoriel
 
-Nous avons ensuite mis en place un modèle de recherche plus élaboré à partir d'un modèle vectoriel se trouvant dans le fichier `vectorizers.py`. <br>
-Ce fichier contient plusieurs classes correspondant aux pondérations ci-dessous : <br>
+Nous avons ensuite mis en place un modèle de recherche plus élaboré à partir d'un modèle vectoriel également dans le fichier `browser.py`. Ce modèle fait appel à plusieurs classes se trouvant dans le fichier `vectorizers.py` et correspondant aux pondérations évoquées ci-dessous. <br>
 Il s'agit ici de vectoriser chaque phrase dans une représentation de tout le vocabulaire de notre corpus. La dimension de chaque vecteur correspond donc à la taille du vocabulaire. <br>
 
 ### Pondération booléenne
  
-Dans le cas de la pondération booléenne, la vectorisation est assez simple : le vecteur d'une phrase contient un 1 dans la colonne _i_ si le mot représenté par la colonne _i_ est contenu dans cette phrase, sinon cela vaut 0.
+Dans le cas de la pondération booléenne, la vectorisation est assez simple : le vecteur d'un document contient un 1 dans la colonne _i_ si le mot représenté par la colonne _i_ est contenu dans ce document, sinon cela vaut 0.
 La requête est vectorisée de la même manière. On peut alors cacluler une distance de similarité entre chaque document et la requête ce qui permet de renvoyer tous les documents 'proches' de la requête.
 
 ### Pondération tf-idf
 
-Cette fois-ci le poids associé à la colonne _i_ est différent : on calcule la fréquence d'apparition du mot représenté par la colonne _i_ dans chaque phrase ainsi que sa fréquence d'apparition dans tout le corpus. <br>
+Cette fois-ci le poids associé à la colonne _i_ est différent : on calcule la fréquence d'apparition du mot représenté par la colonne _i_ dans chaque document ainsi que sa fréquence d'apparition dans tout le corpus. <br>
 Cela permet d'accorder moins d'importance aux mots très présents dans le corpus et se focaliser sur les mots-clés. <br>
 La requête peut ici est vectorisée selon la méthode booléenne ou tf-idf.  <br>
 On peut donc encore calculer une distance de similarité entre ces vecteurs. <br>
