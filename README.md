@@ -33,7 +33,7 @@ Elles nous permettent de :
 Une fois notre collection de documents tokenisée, nous trouvons les informations suivantes :
 - nombre de tokens de notre collection : **108 113 tokens**
 - graphe de la fréquence (f) vs rang (r) pour tous les tokens de la collection :
-![](graphes/graph_freq_rank.JPG)
+![](graphs/graph_freq_rank.JPG)
 
 ## Indexation
 
@@ -89,7 +89,7 @@ Il s'agit de prédire les documents pertinents pour chaque requête de query.txt
 Afin de tracer le graphe Précision-Rappel ci-dessous, nous avons fait varier le seuil de similarité (faisant ainsi varier le degré de précision du moteur de recherche).
 Voici le graphe obtenu : 
 
-![](graphes/graphe_pr.png)
+![](graphs/graph_prec_recall.png)
 
 
 ## Expérimentez-vous même !

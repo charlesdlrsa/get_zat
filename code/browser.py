@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Importation des librairies
-from vectorizers import BooleanVectorizer, TfIdfVectorizer, FreqNormVectorizer
+from code.vectorizers import BooleanVectorizer, TfIdfVectorizer, FreqNormVectorizer
 from math import log
 import matplotlib.pyplot as plt
 import numpy as np

@@ -5,10 +5,8 @@
 import os
 
 from code.file_manager import read_file, read_answers
-from code.evaluation import display_graph_pr
 from code.nlp_processing import tokenisation, nb_tokens
-
-from code.browser import build_index_inv
+from code.browser import build_index_inv, display_graph_freq_rank
 
 if __name__ == '__main__':
 
@@ -22,30 +20,27 @@ if __name__ == '__main__':
     collection = read_file(path_cacm, [".T", ".W", ".K"])
     questions = read_file(path_questions, [".W"])
     answers = read_answers(path_answers)
-
-    # Création d'une requête de test
-    query = {0: 'What articles exist which deal with TSS (Time Sharing System), an operating system for IBM computers?'}
+    print("Nombre de documents : ", len(collection), "\n")
+    print("Nombre de questions : ", len(questions), "\n")
+    print("Nombre de réponses : ", len(answers), "\n")
+    print("Document n°39 : ", collection[39], "\n")
 
     # Tokenisation
     collection_tokens = tokenisation(collection, path_common_words, stemming=True)
-    query_tokens = tokenisation(query, path_common_words, stemming=True)
+    print("Nombre de tokens du corpus de tous les documents : ", nb_tokens(collection_tokens), "\n")
+    print("Tokens du document 39 : ", collection_tokens[39], "\n")
 
-    print(collection_tokens[39])
-    # ['secant', 'method', 'simultan', 'nonlinear', 'equat', 'procedur', 'simultan', 'solut', 'system', 'necessarili',
-    #  'linear', 'equat', 'general', 'secant', 'method', 'singl', 'function', 'variabl']
-
-    print(nb_tokens(collection_tokens))
-    # 108113
-
+    # Indexation
     index_inv = build_index_inv(collection_tokens)
-    print(len(index_inv))
-    # 5405
+    print("Taille de notre vocabulaire : ", len(index_inv), "\n")
+    print("Index inversé du mot 'variable' : \n", index_inv['variabl'], "\n")
+    print("Fermez la fenêtre du graphe pour que le code continue.")
+    display_graph_freq_rank(index_inv, collection_tokens)
 
-    print(index_inv['method'])
-    # {16: 0.25, 26: 0.25, 28: 0.3333333333333333, 35: 0.2, 39: 0.1111111111111111, 42: 0.2, 52: 0.1,
-    #  82: 0.05263157894736842, 87: 0.14285714285714285, 88: 0.1111111111111111, ........]
 
-    # graphe_frequence_rang(index_inv, collection_tokens)
+    # Création d'une requête de test
+    # query_tokens = tokenisation(query, path_common_words, stemming=True)
+    # query = {0: 'What articles exist which deal with TSS (Time Sharing System), an operating system for IBM computers?'}
 
     # print(boolean_request("language", "AND", "Implementation", index_inv))
 
@@ -67,6 +62,6 @@ if __name__ == '__main__':
     # print('precision : {}'.format(precision))
     # print('rappel : {}'.format(recall))
 
-    display_graph_pr(questions, collection_tokens, index_inv, answers, 'tf-idf', vectorize_request=False)
+    # display_graph_pr(questions, collection_tokens, index_inv, answers, 'tf-idf', vectorize_request=False)
 
 
