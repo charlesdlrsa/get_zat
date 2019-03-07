@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Importation des librairies
-from browser import compute_similarity, compute_vectors
+from code.browser import compute_similarity, compute_vectors
 import matplotlib.pyplot as plt
 
 

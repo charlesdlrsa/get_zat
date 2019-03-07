@@ -3,15 +3,12 @@
 
 # Importation des librairies
 import os
-from datetime import datetime
 
-from file_manager import read_file, read_answers
-from evaluation import compute_precision_recall, display_graph_pr
-from nlp_processing import tokenisation, nb_tokens
+from code.file_manager import read_file, read_answers
+from code.evaluation import display_graph_pr
+from code.nlp_processing import tokenisation, nb_tokens
 
-from browser import build_index_inv, graphe_frequence_rang, boolean_request, compute_similarity
-from vectorizers import BooleanVectorizer, TfIdfVectorizer, FreqNormVectorizer
-
+from code.browser import build_index_inv
 
 if __name__ == '__main__':
 

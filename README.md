@@ -6,7 +6,7 @@ _Auteurs : Erwan de Kergaradec et Charles de la Roche Saint André_
 
 Vous trouverez dans ce `ReadME` l'ensemble de nos résultats concernant notre projet scolaire de "Fondements à la recherche d'informations". Ce premier projet a pour objectif de mettre en œuvre les notions fondamentales d’indexation et de
 modèles de recherche vues en cours par la réalisation d’un petit moteur de recherche ad-hoc. Il s'appuie sur la base statique de documents textuels CACM contenant un ensemble de corpus, questions et réponses associées. <br>
-Chacune des parties ci-dessous détaille le contenu de nos fichiers `.py` ainsi que les rôles respectifs de nos fonctions. <br>
+Chacune des parties ci-dessous détaille le contenu de nos fichiers `.py` contenus dans le dossier `code` ainsi que les rôles respectifs de nos fonctions. <br>
 La dernière partie explique comment lancer notre code pour retrouver les mêmes résultats et faire vos propres recherches sur le corpus CACM.
 
 ## Lecture des datasets
@@ -33,7 +33,7 @@ Elles nous permettent de :
 Une fois notre collection de documents tokenisée, nous trouvons les informations suivantes :
 - nombre de tokens de notre collection : **108 113 tokens**
 - graphe de la fréquence (f) vs rang (r) pour tous les tokens de la collection :
-![](graph_freq_rank.JPG)
+![](graphes/graph_freq_rank.JPG)
 
 ## Indexation
 
@@ -49,14 +49,15 @@ Nous avons pu déterminer de cet index inversé la taille de notre vocabulaire :
 
 ## Moteur de recherche booléen
 
-Nous avons mis en place un modèle de recherche booléen (`boolean_request`) présent dans le fichier `browser.py`. <br>
+Nous avons mis en place un modèle de recherche booléen présent dans le fichier `browser.py` au sein de la fonction `boolean_request`. <br>
 Ce modèle de recherche se base sur une requête contenant deux mots clefs et un opérateur. <br>
 Assez basiquement, on prétraite nos deux mots de la même manière que notre collection de documents, puis on regarde quels documents contiennent le premier mot et quels documents contiennent le second mot. <br>
 Ensuite, en fonction de l'opérateur (AND, OR, NOT), on renvoie la liste triée de documents correspondants à notre requête booléenne.
 
 ## Modèle de recherche vectoriel
 
-Nous avons ensuite mis en place un modèle de recherche plus élaboré (le modèle vectoriel `compute_vectors`), également présent dans le fichier `browser.py`. Ce modèle fait appel à plusieurs classes se trouvant dans le fichier `vectorizers.py` et correspondant aux pondérations évoquées ci-dessous. <br>
+Nous avons ensuite mis en place un modèle de recherche vectoriel plus élaboré également présent dans le fichier `browser.py` au sein de la fonction `compute_vectors`. <br> 
+Ce modèle fait appel à plusieurs classes se trouvant dans le fichier `vectorizers.py` et correspondant aux pondérations évoquées ci-dessous. <br>
 Il s'agit ici de vectoriser chaque phrase dans une représentation de tout le vocabulaire de notre corpus. La dimension de chaque vecteur correspond donc à la taille du vocabulaire. <br>
 
 ### Pondération booléenne
@@ -88,7 +89,7 @@ Il s'agit de prédire les documents pertinents pour chaque requête de query.txt
 Afin de tracer le graphe Précision-Rappel ci-dessous, nous avons fait varier le seuil de similarité (faisant ainsi varier le degré de précision du moteur de recherche).
 Voici le graphe obtenu : 
 
-![](graphe_pr.png)
+![](graphes/graphe_pr.png)
 
 
 ## Expérimentez-vous même !
