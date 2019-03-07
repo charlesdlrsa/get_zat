@@ -33,7 +33,7 @@ Elles nous permettent de :
 Une fois notre collection de documents tokenisée, nous trouvons les informations suivantes :
 - nombre de tokens de notre collection : **108 113 tokens**
 - graphe de la fréquence (f) vs rang (r) pour tous les tokens de la collection :
-![](graphs/graph_freq_rank.JPG)
+![](graphs/graph_freq_rank.jpg)
 
 ## Indexation
 
@@ -121,6 +121,6 @@ Voici le graphe obtenu :
 
 <br/>
 
-**5.** Pour lancer notre code et retrouvez tous les résultats du `ReadMe` : 
+**5.** Vous pouvez lancer notre code et retrouver tous les résultats du `ReadMe` : 
 
 `python3 main.py` or `python main.py`

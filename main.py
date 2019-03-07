@@ -39,8 +39,8 @@ if __name__ == '__main__':
 
 
     # Création d'une requête de test
-    # query_tokens = tokenisation(query, path_common_words, stemming=True)
-    # query = {0: 'What articles exist which deal with TSS (Time Sharing System), an operating system for IBM computers?'}
+    query = {0: 'What articles exist which deal with TSS (Time Sharing System), an operating system for IBM computers?'}
+    query_tokens = tokenisation(query, path_common_words, stemming=True)
 
     # print(boolean_request("language", "AND", "Implementation", index_inv))
 
