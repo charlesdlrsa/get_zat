@@ -91,11 +91,36 @@ Voici le graphe obtenu :
 
 ![](graphs/graph_prec_recall.png)
 
-
 ## Expérimentez-vous même !
 
+**1.** Installer le package python `virtualenv` :
 
+`pip3 install virtualenv` or `pip install virtualenv`
 
+**2.** Allez dans le répertoire de votre choix, créez-y un environnement virtuel et activez le :
 
+`cd ./your_directory`
 
+`virtualenv venv`
 
+- Linux / MacOS: `source venv/bin/activate`
+
+- Windows: `.\venv\Scripts\activate.bat`
+
+**3.** Allez dans le dossier `venv` et clonez-y le projet github :
+
+`cd ./venv`
+
+`git clone git@github.com:charlesdlrsa/get_zat.git`
+
+**4.** Pour lancer notre code, vous avez besoin d'installer certains "requirements".
+
+`cd ./get_zat`
+
+`pip3 install -r requirements.txt` or `pip install -r requirements.txt`
+
+<br/>
+
+**5.** Pour lancer notre code et retrouvez tous les résultats du `ReadMe` : 
+
+`python3 main.py` or `python main.py`
