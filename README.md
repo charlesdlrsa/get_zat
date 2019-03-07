@@ -32,7 +32,8 @@ Elles nous permettent de :
 
 Une fois notre collection de documents tokenisée, nous trouvons les informations suivantes :
 - nombre de tokens de notre collection : **108 113 tokens**
-- graphe de la fréquence (f) vs rang (r) pour tous les tokens de la collection : 
+- graphe de la fréquence (f) vs rang (r) pour tous les tokens de la collection :
+![](graph_freq_rank.JPG)
 
 ## Indexation
 
@@ -48,14 +49,14 @@ Nous avons pu déterminer de cet index inversé la taille de notre vocabulaire :
 
 ## Moteur de recherche booléen
 
-Nous avons mis en place un modèle de recherche booléen présent dans le fichier `browser.py`. <br>
+Nous avons mis en place un modèle de recherche booléen (`boolean_request`) présent dans le fichier `browser.py`. <br>
 Ce modèle de recherche se base sur une requête contenant deux mots clefs et un opérateur. <br>
 Assez basiquement, on prétraite nos deux mots de la même manière que notre collection de documents, puis on regarde quels documents contiennent le premier mot et quels documents contiennent le second mot. <br>
 Ensuite, en fonction de l'opérateur (AND, OR, NOT), on renvoie la liste triée de documents correspondants à notre requête booléenne.
 
 ## Modèle de recherche vectoriel
 
-Nous avons ensuite mis en place un modèle de recherche plus élaboré, le modèle vectoriel, également présent dans le fichier `browser.py`. Ce modèle fait appel à plusieurs classes se trouvant dans le fichier `vectorizers.py` et correspondant aux pondérations évoquées ci-dessous. <br>
+Nous avons ensuite mis en place un modèle de recherche plus élaboré (le modèle vectoriel `compute_vectors`), également présent dans le fichier `browser.py`. Ce modèle fait appel à plusieurs classes se trouvant dans le fichier `vectorizers.py` et correspondant aux pondérations évoquées ci-dessous. <br>
 Il s'agit ici de vectoriser chaque phrase dans une représentation de tout le vocabulaire de notre corpus. La dimension de chaque vecteur correspond donc à la taille du vocabulaire. <br>
 
 ### Pondération booléenne
