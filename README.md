@@ -33,7 +33,7 @@ Elles nous permettent de :
 Une fois notre collection de documents tokenisée, nous trouvons les informations suivantes :
 - nombre de tokens de notre collection : **108 113 tokens**
 - graphe de la fréquence (f) vs rang (r) pour tous les tokens de la collection :
-![](graphe_freq_rank.jpg)
+![](graph_freq_rank.jpg)
 
 ## Indexation
 
