@@ -48,10 +48,10 @@ if __name__ == '__main__':
     query_tokens = tokenisation(query, path_common_words, stemming=True)
 
     # Modèle de recherche vectoriel (ici on a pris tf-idf mais possibilité d'utiliser les deux autres)
-    # vectorizer = BooleanVectorizer()
-    # vectorizer = FreqNormVectorizer(vectorize_request=False)
+    ## vectorizer = BooleanVectorizer()
+    ## vectorizer = FreqNormVectorizer(vectorize_request=False)
     vectorizer = TfIdfVectorizer(norm=False, vectorize_request=False)
-    print("On teste un modèle de recherche tf-idf sur une requête test : '\n'", query[0], '\n')
+    print("On teste un modèle de recherche tf-idf sur une requête test : \n", query[0], '\n')
 
     # Vectorisation selon la méthode choisie
     vec_collections = vectorizer.fit_transform(index_inv, collection_tokens)
@@ -62,12 +62,12 @@ if __name__ == '__main__':
     print('Calcul de la similarité sur notre requête test : {}'.format(result), '\n')
 
     # Evaluation du corpus avec la modèle de recherche vectoriel tf-idf
-    print("On teste un modèle de recherche tf-idf sur l'ensemble du corpus de documents. \n")
-    print("C'est un peu long à tourner. \n")
+    print("On teste un modèle de recherche tf-idf sur l'ensemble des questions. \n")
+    print("(Veuillez patienter, le modèle met un peu de temps à tourner...) \n")
     precision, recall = compute_precision_recall(questions, collection_tokens, index_inv, answers,
                                                  'tf-idf', threshold=0.15, vectorize_request=False)
-    print('Precision pour le modele tf-idf avec un seuil de 0.15: {}'.format(precision), '\n')
-    print('Rappel pour le modele tf-idf avec un seuil de 0.15: {}'.format(recall), '\n')
+    print("Precision pour le modele tf-idf sur l'ensemble des questions avec un seuil de 0.15: {}".format(precision), '\n')
+    print("Rappel pour le modele tf-idf sur l'ensemble des questions avec un seuil de 0.15: {}".format(recall), '\n')
 
     # Très long à faire tourner car on calcule la précision et le rappel pour plusieurs tresholds sur tout le corpus
     # print("Fermez la fenêtre du graphe pour que le code continue. \n")

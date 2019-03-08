@@ -7,7 +7,7 @@ _Auteurs : Erwan de Kergaradec et Charles de la Roche Saint André_
 Vous trouverez dans ce `ReadME` l'ensemble de nos résultats concernant notre projet scolaire de "Fondements à la recherche d'informations". Ce premier projet a pour objectif de mettre en œuvre les notions fondamentales d’indexation et de
 modèles de recherche vues en cours par la réalisation d’un petit moteur de recherche ad-hoc. Il s'appuie sur la base statique de documents textuels CACM contenant un ensemble de corpus, questions et réponses associées. <br>
 Chacune des parties ci-dessous détaille le contenu de nos fichiers `.py` contenus dans le dossier `code` ainsi que les rôles respectifs de nos fonctions. <br>
-La dernière partie explique comment lancer notre code pour retrouver les mêmes résultats et faire vos propres recherches sur le corpus CACM.
+La dernière partie explique comment lancer notre code contenu dans le fichier `main.py` pour retrouver les mêmes résultats et faire vos propres recherches sur le corpus CACM.
 
 ## Lecture des datasets
 
@@ -83,15 +83,17 @@ Dans ce cas, on calcule encore la fréquence du mot représenté par la colonne 
 ## Evaluation pour la collection CACM
 
 Afin d'évaluer la collection CACM, nous avons d'abord réalisé un apprentissage sur cette collection (en choisissant un type de vectorisation). <br>
-Nous nous sommes servis des fichiers query.txt et qrels.txt afin de tester notre moteur de recherche ainsi entrainé. <br>
+Nous nous sommes servis des fichiers `query.txt` et `qrels.txt` afin de tester notre moteur de recherche ainsi entrainé. <br>
 Il s'agit de prédire les documents pertinents pour chaque requête de query.txt et de le comparer aux réponses du fichiers qrels.txt. Ceci nous permet de calculer la précision et le rappel pour un seuil de similarité fixé.
 
 Afin de tracer le graphe Précision-Rappel ci-dessous, nous avons fait varier le seuil de similarité (faisant ainsi varier le degré de précision du moteur de recherche).
-Voici le graphe obtenu : 
+Voici le graphe obtenu pour le modèle tf-idf : 
 
 ![](graphs/graph_prec_recall.png)
 
 ## Expérimentez-vous même !
+
+Voici les différentes étapes à suivre afin de pouvoir lancer par vous-même notre code.<br>
 
 **1.** Installer le package python `virtualenv` :
 
@@ -124,3 +126,5 @@ Voici le graphe obtenu :
 **5.** Vous pouvez lancer notre code et retrouver tous les résultats du `ReadMe` : 
 
 `python3 main.py` or `python main.py`
+
+Vous devriez voir apparaitre dans votre console nos différents résultats.

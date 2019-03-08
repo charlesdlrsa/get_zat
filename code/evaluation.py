@@ -38,7 +38,6 @@ def compute_precision_recall(query_tokens: dict, collection_tokens: dict, index_
             if doc_id_real not in query_result[index]:
                 nb_fn += 1
 
-    print(nb_vp, nb_fp, nb_fn)
     precision = nb_vp / (nb_fp + nb_vp) if nb_fp + nb_vp != 0 else 0
     recall = nb_vp / (nb_vp + nb_fn) if nb_vp + nb_fn != 0 else 0
 
