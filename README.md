@@ -111,7 +111,8 @@ Voici le graphe obtenu :
 
 `cd ./venv`
 
-`git clone git@github.com:charlesdlrsa/get_zat.git`
+`git clone git@github.com:charlesdlrsa/get_zat.git` en ssh  
+`git clone https://github.com/charlesdlrsa/get_zat.git` en https
 
 **4.** Pour lancer notre code, vous avez besoin d'installer certains "requirements".
 
